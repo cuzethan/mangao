@@ -1,27 +1,22 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face{
+  font-family: BBH;
+  src: url('./assets/fonts/BBHHegarty-Regular.ttf')
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+@font-face {
+  font-family: nunito;
+  src: url('./assets/fonts/Nunito-Regular.ttf');
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+@font-face {
+  font-family: nunito-bold;
+  src: url('./assets/fonts/Nunito-Bold.ttf');
+}
+
+@import "tailwindcss";
+
+@theme{
+  --font-bbh: BBH, "sans-serif";
+  --font-nunito: nunito, "sans-serif";
+  --font-nunito-bold: nunito-bold, "sans-serif";
 }

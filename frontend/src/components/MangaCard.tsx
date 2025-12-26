@@ -1,6 +1,24 @@
-function MangaCard({name}: {name: string}) {
+type Status = "completed" | "reading" | "planned" | "hold";
+
+interface CardProps {
+    name: string;
+    status: Status;
+    imgUrl: string;
+}
+
+function MangaCard({name, status, imgUrl}: CardProps) {
     return (
-        <h2>{name}</h2>
+        <div className="border-white border-2 rounded-md p-4 flex justify-between">
+            <div className="flex flex-col gap-2">
+                <h2 className="font-bbh text-3xl">{name}</h2>
+                <img src={imgUrl}/>
+            </div>
+            <div className="flex flex-col justify-end font-nunito text-xl">
+                <p>
+                    <span className="font-nunito-bold">Name:</span> {status}
+                </p>
+            </div>
+        </div>
     )
 }
 
