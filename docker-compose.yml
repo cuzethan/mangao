@@ -1,20 +1,31 @@
 services:
   db:
     build:
-      context: ./backend/database
+      context: ./database
       dockerfile: Dockerfile
     image: mangao_postgres_db
     env_file:
-      - ./backend/.env
+      - .env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
-    ports:
-      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: express_backend
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
 
 volumes:
   db_data:
