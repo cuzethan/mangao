@@ -9,3 +9,15 @@ ex.
 > POSTGRES_USER=mangao_user
 >
 > POSTGRES_PASSWORD=mangao_password
+>
+> PGUSER=mangao_user
+>
+> PORT = 3000
+>
+> PGPASSWORD=mangao_password
+> 
+> PGDATABASE=mangao_db
+>
+> PGHOST=db
+>
+> PGPORT=5432
