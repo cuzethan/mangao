@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import MangaList  from './components/MangaList'
 import Bar from './components/Bar'
 
@@ -11,7 +10,6 @@ const sampleData = [
 ]
 
 function App() {
-
   return (
     <div className="mx-auto p-6 bg-black text-white">
       <h1 className="text-5xl font-bbh">WELCOME TO MANGAO!!!</h1>
