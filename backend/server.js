@@ -13,9 +13,14 @@ app.get('/', (req, res) => {
 })
 
 app.get('/testing', async (req, res) => {
-    const query = 'SELECT * FROM mangas'
-    const result = await client.query(query)
-    res.send(result)
+    try {
+        const query = 'SELECT * FROM mangas';
+        const result = await client.query(query);
+        res.json(result.rows); 
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 })
 
 app.listen(port, () => {
