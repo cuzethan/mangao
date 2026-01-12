@@ -1,8 +1,14 @@
 import express from 'express'
 import { Client } from 'pg'
+import cors from 'cors'
 
 const app = express()
-const port = process.env.PORT || 3000;
+const port = process.env.VITE_BACKEND_PORT || 3000;
+app.use(cors({
+    origin: 'http://localhost:5173', // Replace with your actual Vite port
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 
 const client = new Client()
 await client.connect()
