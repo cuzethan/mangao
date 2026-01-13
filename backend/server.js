@@ -12,13 +12,12 @@ app.use(cors({
 
 const client = new Client()
 await client.connect()
- 
 
 app.get('/', (req, res) => {
     res.send("DOCKER IFNLAL TESTING TESTING")
 })
 
-app.get('/testing', async (req, res) => {
+app.get('/getMangaList', async (req, res) => {
     try {
         const query = 'SELECT * FROM mangas';
         const result = await client.query(query);
