@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Modal from './Modal'
+import AddMangaForm from './AddMangaForm'
 
 interface FilterState {
     completed: boolean,
@@ -36,7 +37,7 @@ export default function Bar({filters, onFilterChange}: BarProps) {
                 ADD MANGA
             </button>
             <Modal open={open} onClose = {() => setOpen(false)}>
-                <h1 className ="text-black">HI</h1>
+                <AddMangaForm closeModal={() => setOpen(false)}/>
             </Modal>
         </div>
     )

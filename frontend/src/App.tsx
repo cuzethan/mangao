@@ -23,7 +23,8 @@ function App() {
   };
 
   useEffect(() => {
-    axios.get(url + '/getMangaList').then((res) => {
+    axios.get(url + '/getMangaList', {params:filters})
+    .then((res) => {
       setMangaData(res.data)
     }).catch((err) => console.log(err))
   }, []);
