@@ -21,3 +21,7 @@ ex.
 > PGHOST=db
 >
 > PGPORT=5432
+
+Enter the db from docker desktop exec.
+
+"psql -U mangao_user -d mangao_db"
