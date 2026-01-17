@@ -12,9 +12,10 @@ interface FilterState {
 interface BarProps {
     filters: FilterState;
     onFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onMangaAdded: () => void;
 }
 
-export default function Bar({filters, onFilterChange}: BarProps) {
+export default function Bar({filters, onFilterChange, onMangaAdded}: BarProps) {
     const [open, setOpen] = useState(false)
 
     return (
@@ -37,7 +38,7 @@ export default function Bar({filters, onFilterChange}: BarProps) {
                 ADD MANGA
             </button>
             <Modal open={open} onClose = {() => setOpen(false)}>
-                <AddMangaForm closeModal={() => setOpen(false)}/>
+                <AddMangaForm closeModal={() => setOpen(false)} onSuccess={onMangaAdded}/>
             </Modal>
         </div>
     )

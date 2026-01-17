@@ -1,23 +1,31 @@
 import axios from 'axios'
+import { useState } from 'react'
 
 const url = `http://localhost:${import.meta.env.VITE_PORT|| 3000}`
 
 interface AddMangaFormProps {
     closeModal: () => void
+    onSuccess: () => void
 }
 
+export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps) {
+    const [errorMessage, setErrorMessage] = useState('')
+    const [displayError, setDisplayError] = useState(false)
 
-export default function AddMangaForm({closeModal}: AddMangaFormProps) {
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         const data = Object.fromEntries(formData.entries())
-
-        axios.post(`${url}/addManga`, data)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
-
-        closeModal()
+            
+        try {
+            await axios.post(`${url}/addManga`, data)
+            onSuccess();
+            closeModal();
+            setDisplayError(false);
+        } catch (err: any) {
+            setErrorMessage(err.response.data.message);
+            setDisplayError(true);
+        }
     }
 
     return (
@@ -37,6 +45,7 @@ export default function AddMangaForm({closeModal}: AddMangaFormProps) {
                 Image URL: <input name="imageurl" className="border p-1 rounded-lg w-60"
                 placeholder="Leave empty for default..."/>
             </label>
+            {displayError && <p className="text-sm text-red-600">{errorMessage}</p>}
             <button type="submit" className="border p-1 rounded-lg hover:bg-black/5">Submit Form</button>
         </form>
     )

@@ -1,7 +1,7 @@
 import MangaList  from './components/MangaList'
 import Bar from './components/Bar'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const url = `http://localhost:${import.meta.env.VITE_PORT|| 3000}`
 
@@ -22,17 +22,24 @@ function App() {
       }));
   };
 
-  useEffect(() => {
-    axios.get(`${url}/getMangaList`, {params:filters})
-    .then((res) => {
-      setMangaData(res.data)
-    }).catch((err) => console.log(err))
-  }, []);
+  const handleMangaRefresh = useCallback(() => {
+    const getMangaList = async () => {
+      try {
+        const res = await axios.get(`${url}/getMangaList`, {params:filters})
+        setMangaData(res.data)
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getMangaList()
+  }, [filters])
+
+  useEffect(() => handleMangaRefresh(), [handleMangaRefresh]);
 
   return (
     <div className="mx-auto p-6 bg-black text-white">
       <h1 className="text-5xl font-bbh">WELCOME TO MANGAO!!!</h1>
-      <Bar filters={filters} onFilterChange={handleCheckboxChange}></Bar>
+      <Bar filters={filters} onFilterChange={handleCheckboxChange} onMangaAdded={handleMangaRefresh}></Bar>
       <MangaList mangas={mangaData}/>
     </div>
   )
