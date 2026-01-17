@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS mangas;
 CREATE TABLE mangas (
     title VARCHAR(255) PRIMARY KEY,
     status VARCHAR(255),
-    imageURL VARCHAR(255)
+    imageURL TEXT
 );
 
 INSERT INTO mangas VALUES ('One Piece', 'completed', NULL);

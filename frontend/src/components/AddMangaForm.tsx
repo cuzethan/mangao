@@ -23,6 +23,7 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
             closeModal();
             setDisplayError(false);
         } catch (err: any) {
+            console.log(err)
             setErrorMessage(err.response.data.message);
             setDisplayError(true);
         }

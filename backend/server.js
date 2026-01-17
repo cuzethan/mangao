@@ -5,7 +5,7 @@ import cors from 'cors'
 const app = express()
 const port = process.env.VITE_BACKEND_PORT || 3000;
 
-app.use(express.json())
+app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:5173', // Replace with your actual Vite port
     methods: ['GET', 'POST'],
@@ -40,10 +40,10 @@ app.post('/addManga', async (req, res) => {
         })
     }
 
-    if (imageurl && !imageurl.startsWith('http')) {
+    if (imageurl && !(imageurl.startsWith('data:image/') || imageurl.startsWith('http'))) {
         return res.status(400).json({ 
             error: "Invalid URL", 
-            message: "Please provide a valid image link." 
+            message: "Please provide a valid image link" 
         });
     }
 
