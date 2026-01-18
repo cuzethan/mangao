@@ -17,10 +17,14 @@ interface BarProps {
 
 export default function Bar({filters, onFilterChange, onMangaAdded}: BarProps) {
     const [open, setOpen] = useState(false)
+    
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+    } 
 
     return (
         <div className="font-nunito my-4 flex gap-4 items-center">
-            <form className="border-solid border-2 border-white rounded-md p-2">
+            <form onSubmit={handleSubmit} className="border-solid border-2 border-white rounded-md p-2">
                 <input type="text" placeholder="Search..." className="focus:outline-none"/>
             </form>
             <label className="flex gap-2">
