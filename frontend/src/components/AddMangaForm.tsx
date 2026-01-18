@@ -14,7 +14,9 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        const formData = new FormData(e.currentTarget)
+        const form = e.currentTarget;
+
+        const formData = new FormData(form)
         const data = Object.fromEntries(formData.entries())
             
         try {
@@ -22,6 +24,7 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
             onSuccess();
             closeModal();
             setDisplayError(false);
+            form.reset();
         } catch (err: any) {
             console.log(err)
             setErrorMessage(err.response.data.message);
