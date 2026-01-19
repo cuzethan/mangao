@@ -32,19 +32,12 @@ app.get('/getMangaList', async (req, res) => {
 
 app.post('/addManga', async (req, res) => {
     const { title, status, imageurl } = req.body;
-    console.log(title, status, imageurl)
     if (!title) {
-        return res.status(400).json({
-            error: "Invalid Title",
-            message: "Make sure you input a title."
-        })
+        return res.status(400).send('Make sure you input a title.');
     }
 
     if (imageurl && !(imageurl.startsWith('data:image/') || imageurl.startsWith('http'))) {
-        return res.status(400).json({ 
-            error: "Invalid URL", 
-            message: "Please provide a valid image link" 
-        });
+        return res.status(400).send('Please provide a valid image link.');
     }
 
     try {
@@ -54,6 +47,9 @@ app.post('/addManga', async (req, res) => {
         res.status(201).send(`Recieved the data!`)
     } catch (err) {
         console.error(err);
+        if (err.code === '23505') { //indicate duplicate title
+            res.status(403).send('Manga already exists in list!')
+        }
         res.status(500).send('Internal Server Error');
     }
 })
