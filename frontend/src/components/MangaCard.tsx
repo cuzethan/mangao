@@ -15,7 +15,7 @@ function MangaCard({title, status, imageURL, doOnDelete}: CardProps) {
         
         try {
             const res = await axios.delete(`${baseURL}/deleteManga/${title}`)
-            if (res.status === 201) {
+            if (res.status === 201) { // api status code, not manga status
                 doOnDelete()
             }
         } catch (err: any) {
@@ -33,7 +33,7 @@ function MangaCard({title, status, imageURL, doOnDelete}: CardProps) {
                 <button onClick={handleClick} className="border border-2 p-2 rounded-lg w-12 h-12 hover:bg-gray-900">
                     <img src="src/assets/trash-can.svg" alt="trash"/>
                 </button>
-                <p>
+                <p className="capitalize">
                     <span className="font-nunito-bold">Status:</span> {status}
                 </p>
             </div>
