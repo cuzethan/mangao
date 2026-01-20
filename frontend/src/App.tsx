@@ -24,7 +24,7 @@ function App() {
   const handleMangaRefresh = useCallback(() => {
     const getMangaList = async () => {
       try {
-        const res = await axios.get(`${baseURL}/getMangaList`, {params:filters})
+        const res = await axios.get(`${baseURL}/getMangaList`, { params: filters })
         setMangaData(res.data)
       } catch (err) {
         console.log(err);
@@ -33,7 +33,9 @@ function App() {
     getMangaList()
   }, [filters])
 
-  useEffect(() => handleMangaRefresh(), [handleMangaRefresh]);
+  useEffect(() => {
+    handleMangaRefresh()
+  }, [handleMangaRefresh]);
 
   return (
     <div className="min-h-screen w-full mx-auto p-6 bg-black text-white">

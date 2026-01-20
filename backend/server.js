@@ -20,8 +20,18 @@ app.get('/', (req, res) => {
 })
 
 app.get('/getMangaList', async (req, res) => {
+    const filters = req.query
+    const activeFilters = []
+    for (const [key, value] of Object.entries(filters)) {
+        if (value === "true") activeFilters.push(`status = '${key}'`)
+    }
+
     try {
-        const query = 'SELECT * FROM mangas';
+        let query = 'SELECT * FROM mangas'
+        if (activeFilters.length > 0) {
+            const moreQuery = activeFilters.join(' OR ')
+            query = query + " WHERE " + moreQuery
+        }
         const result = await client.query(query);
         res.json(result.rows); 
     } catch (err) {
