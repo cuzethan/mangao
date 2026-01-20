@@ -8,7 +8,7 @@ const port = process.env.VITE_BACKEND_PORT || 3000;
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:5173', // Replace with your actual Vite port
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
     credentials: true
 }));
 
@@ -16,7 +16,7 @@ const client = new Client()
 await client.connect()
 
 app.get('/', (req, res) => {
-    res.send("DOCKER IFNLAL TESTING TESTING")
+    res.send("mangao backend is running :)")
 })
 
 app.get('/getMangaList', async (req, res) => {
@@ -52,8 +52,29 @@ app.post('/addManga', async (req, res) => {
         }
         res.status(500).send('Internal Server Error');
     }
-})
+});
+
+app.get('/deleteManga/:title', async (req, res) => {
+    const title = req.params.title
+    try {
+        const query = "DELETE FROM mangas WHERE title = $1";
+        await client.query(query, [title])
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Internal Server Error');
+    }
+
+    //validate deletion
+    try {
+        const query = "SELECT * FROM mangas WHERE title = 'asdf'";
+        const data = await client.query(query)
+        if (!data.rows[0]) res.status(201).send('Deletion Successful!');
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
-})
+});
