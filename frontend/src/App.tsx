@@ -2,8 +2,7 @@ import MangaList  from './components/MangaList'
 import Bar from './components/Bar'
 import axios from 'axios'
 import { useState, useEffect, useCallback } from 'react'
-
-const url = `http://localhost:${import.meta.env.VITE_PORT|| 3000}`
+import { baseURL } from './constants'
 
 function App() {
   const [mangaData, setMangaData] = useState([]);
@@ -25,7 +24,7 @@ function App() {
   const handleMangaRefresh = useCallback(() => {
     const getMangaList = async () => {
       try {
-        const res = await axios.get(`${url}/getMangaList`, {params:filters})
+        const res = await axios.get(`${baseURL}/getMangaList`, {params:filters})
         setMangaData(res.data)
       } catch (err) {
         console.log(err);

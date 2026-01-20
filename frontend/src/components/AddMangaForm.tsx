@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
-
-const url = `http://localhost:${import.meta.env.VITE_PORT|| 3000}`
+import { baseURL } from '../constants'
 
 interface AddMangaFormProps {
     closeModal: () => void
@@ -20,7 +19,7 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
         const data = Object.fromEntries(formData.entries())
             
         try {
-            await axios.post(`${url}/addManga`, data)
+            await axios.post(`${baseURL}/addManga`, data)
             onSuccess();
             closeModal();
             setDisplayError(false);
