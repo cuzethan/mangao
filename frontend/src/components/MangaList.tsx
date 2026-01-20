@@ -1,8 +1,14 @@
 import MangaCard from "./MangaCard"
 
-function MangaList({mangas}: {mangas: any[]}) {
-    const mangaCards = mangas.map((manga, index) => (
-        <MangaCard key={index} title={manga.title} status={manga.status} imageURL={manga.imageurl}/>
+interface MangaListProps {
+    mangas: any[];
+    onMangaDelete: () => void;
+}
+
+function MangaList({mangas, onMangaDelete}: MangaListProps) {
+    const mangaCards = mangas.map(manga => (
+        <MangaCard key={manga.title} title={manga.title} status={manga.status} 
+        imageURL={manga.imageurl} doOnDelete={onMangaDelete}/>
     ))
 
     return (

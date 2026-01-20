@@ -54,7 +54,7 @@ app.post('/addManga', async (req, res) => {
     }
 });
 
-app.get('/deleteManga/:title', async (req, res) => {
+app.delete('/deleteManga/:title', async (req, res) => {
     const title = req.params.title
     try {
         const query = "DELETE FROM mangas WHERE title = $1";

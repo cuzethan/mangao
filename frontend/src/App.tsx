@@ -39,7 +39,7 @@ function App() {
     <div className="min-h-screen w-full mx-auto p-6 bg-black text-white">
       <h1 className="text-5xl font-bbh">WELCOME TO MANGAO!!!</h1>
       <Bar filters={filters} onFilterChange={handleCheckboxChange} onMangaAdded={handleMangaRefresh}></Bar>
-      <MangaList mangas={mangaData}/>
+      <MangaList mangas={mangaData} onMangaDelete={handleMangaRefresh}/>
     </div>
   )
 }

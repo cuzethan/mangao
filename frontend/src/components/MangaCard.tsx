@@ -1,19 +1,26 @@
 import axios from "axios";
 
-import { type Status, defaultImgUrl } from "../constants";
+import { type Status, defaultImgUrl, baseURL } from "../constants";
 
 interface CardProps {
     title: string;
     status: Status;
     imageURL: string;
+    doOnDelete: () => void;
 }
 
-function MangaCard({title, status, imageURL}: CardProps) {
+function MangaCard({title, status, imageURL, doOnDelete}: CardProps) {
     async function handleClick (e: React.FormEvent<HTMLButtonElement>) {
         e.preventDefault()
-
-
-        //call the data some
+        
+        try {
+            const res = await axios.delete(`${baseURL}/deleteManga/${title}`)
+            if (res.status === 201) {
+                doOnDelete()
+            }
+        } catch (err: any) {
+            console.log(err)
+        }
     }
     
     return (
