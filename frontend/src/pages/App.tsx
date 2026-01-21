@@ -1,8 +1,8 @@
-import MangaList  from './components/MangaList'
-import Bar from './components/Bar'
+import MangaList from '../components/MangaList'
+import Bar from '../components/Bar'
 import axios from 'axios'
 import { useState, useEffect, useCallback } from 'react'
-import { baseURL } from './constants'
+import { baseURL } from '../constants'
 
 function App() {
   const [mangaData, setMangaData] = useState([]);
@@ -12,13 +12,13 @@ function App() {
     planned: false,
     hold: false
   })
-  
+
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, checked } = event.target;
-      setFilters((prevFilters) => ({
-          ...prevFilters,
-          [name]: checked
-      }));
+    const { name, checked } = event.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: checked
+    }));
   };
 
   const handleMangaRefresh = useCallback(() => {
@@ -38,10 +38,10 @@ function App() {
   }, [handleMangaRefresh]);
 
   return (
-    <div className="min-h-screen w-full mx-auto p-6 bg-black text-white">
+    <div className="mx-auto p-6 text-white">
       <h1 className="text-5xl font-bbh">WELCOME TO MANGAO!!!</h1>
       <Bar filters={filters} onFilterChange={handleCheckboxChange} onMangaAdded={handleMangaRefresh}></Bar>
-      <MangaList mangas={mangaData} onMangaDelete={handleMangaRefresh}/>
+      <MangaList mangas={mangaData} onMangaDelete={handleMangaRefresh} />
     </div>
   )
 }

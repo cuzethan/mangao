@@ -20,3 +20,7 @@
   --font-nunito: nunito, "sans-serif";
   --font-nunito-bold: nunito-bold, "sans-serif";
 }
+
+:root {
+  background-color: black;
+}
