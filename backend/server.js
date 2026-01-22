@@ -2,7 +2,7 @@ import express from 'express'
 import { Client } from 'pg'
 import cors from 'cors'
 import { hash, compare } from 'bcrypt'
-//import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 const app = express()
 const port = process.env.PORT || 3000;
@@ -11,6 +11,7 @@ const client = new Client()
 await client.connect()
 
 let users = [] //use db to store user later 
+let refreshTokens = [] //use db to store later
 
 app.use(express.json());
 app.use(cors({
@@ -89,14 +90,14 @@ app.delete('/deleteManga/:title', async (req, res) => {
     }
 });
 
-app.get('/users', (req, res) => {
-    res.json(users)
+app.get('/users', authenticateToken, (req, res) => { //verify through token header (no need for username in body)
+    res.json(users.filter(user => user.username === req.user.username))
 })
 
 app.post('/users', async (req, res) => {
     try {
         const hashedPassword = await hash(req.body.password, 10) //10 is # of rounds for salt gen.
-        const user = { name: req.body.name, password: hashedPassword }
+        const user = { username: req.body.username, password: hashedPassword }
         users.push(user)
         res.status(201).send()
     } catch {
@@ -105,14 +106,17 @@ app.post('/users', async (req, res) => {
 })
 
 app.post('/users/login', async (req, res) => {
-    const user = users.find(user => user.name === req.body.name);
+    const user = users.find(user => user.username === req.body.username);
     if (user == null) {
         return res.status(400).send("Cannot find user")
     }
     try {
-        console.log(user)
         if (await compare(req.body.password, user.password)) {
-            res.send("Success");
+            const user = { username: req.body.username }
+            const accessToken = generateAccessToken(user);
+            const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+            refreshTokens.push(refreshToken)
+            res.json({ accessToken: accessToken, refreshToken: refreshToken });
         } else {
             res.send('Login failed');
         } 
@@ -122,10 +126,45 @@ app.post('/users/login', async (req, res) => {
     }
 })
 
+app.delete('/users/logout', (req, res) => {
+    refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+})
+
+app.get('/token', (req, res) => {
+    const refreshToken = req.body.token
+    if (refreshToken == null) return res.sendStatus(401);
+    if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if (err) return res.status
+        const accessToken = generateAccessToken({ username: user.username })
+        res.json({ accessToken: accessToken })
+    })
+})
+
+app.get('/users/test', (req, res) => {
+    res.send(users)
+});
+
 app.get('/users/delete', (req, res) => {
     users = []
     res.status(200).send()
 });
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null) return res.sendStatus(401)
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403)
+        req.user=user;
+        next()
+    })
+}
+
+function generateAccessToken(user) {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m'}) 
+}
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
