@@ -1,19 +1,23 @@
 import express from 'express'
 import { Client } from 'pg'
 import cors from 'cors'
+import { hash, compare } from 'bcrypt'
+//import jwt from 'jsonwebtoken'
 
 const app = express()
-const port = process.env.VITE_BACKEND_PORT || 3000;
-
-app.use(express.json());
-app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your actual Vite port
-    methods: ['GET', 'POST', 'DELETE'],
-    credentials: true
-}));
+const port = process.env.PORT || 3000;
 
 const client = new Client()
 await client.connect()
+
+let users = [] //use db to store user later 
+
+app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'DELETE'],
+    credentials: true
+}));
 
 app.get('/', (req, res) => {
     res.send("mangao backend is running :)")
@@ -83,6 +87,44 @@ app.delete('/deleteManga/:title', async (req, res) => {
         console.log(err)
         res.status(500).send('Internal Server Error');
     }
+});
+
+app.get('/users', (req, res) => {
+    res.json(users)
+})
+
+app.post('/users', async (req, res) => {
+    try {
+        const hashedPassword = await hash(req.body.password, 10) //10 is # of rounds for salt gen.
+        const user = { name: req.body.name, password: hashedPassword }
+        users.push(user)
+        res.status(201).send()
+    } catch {
+        res.status(500).send()
+    }
+})
+
+app.post('/users/login', async (req, res) => {
+    const user = users.find(user => user.name === req.body.name);
+    if (user == null) {
+        return res.status(400).send("Cannot find user")
+    }
+    try {
+        console.log(user)
+        if (await compare(req.body.password, user.password)) {
+            res.send("Success");
+        } else {
+            res.send('Login failed');
+        } 
+    } catch (err) {
+        console.log(err)
+        res.status(500).send()
+    }
+})
+
+app.get('/users/delete', (req, res) => {
+    users = []
+    res.status(200).send()
 });
 
 app.listen(port, () => {
