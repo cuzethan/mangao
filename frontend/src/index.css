@@ -15,7 +15,7 @@
 
 @import "tailwindcss";
 
-@theme{
+@theme {
   --font-bbh: BBH, "sans-serif";
   --font-nunito: nunito, "sans-serif";
   --font-nunito-bold: nunito-bold, "sans-serif";
@@ -23,4 +23,5 @@
 
 :root {
   background-color: black;
+  overflow: hidden;
 }
