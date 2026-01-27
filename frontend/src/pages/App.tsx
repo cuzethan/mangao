@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { baseURL } from '../constants'
 
 function App() {
+  const mangaURL = baseURL + '/mangas'
   const [mangaData, setMangaData] = useState([]);
   const [filters, setFilters] = useState({
     completed: false,
@@ -24,7 +25,7 @@ function App() {
   const handleMangaRefresh = useCallback(() => {
     const getMangaList = async () => {
       try {
-        const res = await axios.get(`${baseURL}/getMangaList`, { params: filters })
+        const res = await axios.get(`${mangaURL}/getMangaList`, { params: filters })
         setMangaData(res.data)
       } catch (err) {
         console.log(err);

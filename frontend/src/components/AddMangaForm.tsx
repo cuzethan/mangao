@@ -7,6 +7,8 @@ interface AddMangaFormProps {
     onSuccess: () => void
 }
 
+const mangaURL = baseURL + "/mangas"
+
 export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps) {
     const [errorMessage, setErrorMessage] = useState('')
     const [displayError, setDisplayError] = useState(false)
@@ -19,7 +21,7 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
         const data = Object.fromEntries(formData.entries())
             
         try {
-            await axios.post(`${baseURL}/addManga`, data)
+            await axios.post(`${mangaURL}/addManga`, data)
             onSuccess();
             closeModal();
             setDisplayError(false);
