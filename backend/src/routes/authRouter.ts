@@ -2,10 +2,15 @@ import express from 'express'
 import { hash, compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import CONFIG from '../config/env.ts'
+import cookieParser from 'cookie-parser'
+
+import { sendQuery } from '../config/db.ts'
+
 import { authenticateToken } from '../middleware/auth.ts'
 import type { AuthRequest, UserPayload } from '../middleware/auth.ts'
 
 const router = express.Router()
+router.use(cookieParser())
 
 let users: { username: string, password: string }[] = [] //use db to store user later 
 let refreshTokens: string[] = [] //use db to store later
@@ -18,14 +23,30 @@ router.get('/users', authenticateToken, (req: AuthRequest, res) => { //verify th
     res.json(users.filter(user => user.username === req.user?.username))
 })
 
-router.post('/users', async (req, res) => {
+router.get('/listUsers', async (req, res) => {
+    const query = 'SELECT * FROM users';
+    try {
+        const result = await sendQuery(query);
+        res.json(result.rows); 
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+})
+
+router.post('/signup', async (req, res) => {
     try {
         const hashedPassword = await hash(req.body.password, 10) //10 is # of rounds for salt gen.
-        const user = { username: req.body.username, password: hashedPassword }
-        users.push(user)
-        res.status(201).send()
-    } catch {
-        res.status(500).send()
+        const query = "INSERT INTO users (username, password_hashed) VALUES ($1, $2)";
+        const values = [req.body.username, hashedPassword]
+        await sendQuery(query, values)
+        res.status(201).json({
+            username: values[0],
+            password: values[1]
+        })
+    } catch (err) {
+        //implement proper error catching from postgres with codes
+        res.status(500).send(err)
     }
 })
 
