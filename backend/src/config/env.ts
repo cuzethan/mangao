@@ -9,7 +9,6 @@ function getEnv(key: string, defaultVal?: string): string {
 const CONFIG = {
     PORT: parseInt(getEnv('PORT', '3000')),
     ACCESS_TOKEN_SECRET: getEnv('ACCESS_TOKEN_SECRET'),
-    REFRESH_TOKEN_SECRET: getEnv('REFRESH_TOKEN_SECRET')
 };
 
 export default CONFIG;
