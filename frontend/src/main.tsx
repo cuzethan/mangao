@@ -6,12 +6,17 @@ import { RouterProvider } from 'react-router/dom'
 import './index.css'
 import App from './pages/App.tsx'
 import Home from './pages/Home.tsx'
+import Signup from './pages/Signup.tsx'
 
 const router = createBrowserRouter([
   { index: true, Component: Home },
   {
     Component: App,
     path: "/app",
+  },
+  {
+    Component: Signup,
+    path: "/signup"
   }
 ]);
 
