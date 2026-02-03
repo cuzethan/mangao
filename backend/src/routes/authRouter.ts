@@ -14,6 +14,15 @@ router.use(cookieParser())
     res.json(users.filter(user => user.username === req.user?.username))
 }) */
 
+router.get('/usernameCheck/:username', async (req, res) => {
+    const username = req.params.username
+    const query = `SELECT * FROM users WHERE username = $1`
+    const user = (await sendQuery(query, [username])).rows[0]
+    console.log(user)
+    if(user) res.status(200).send(false) //notifies user already exists
+    else res.status(200).send(true)
+})
+
 router.get('/listUsers', async (req, res) => {
     const query = 'SELECT * FROM users';
     try {
