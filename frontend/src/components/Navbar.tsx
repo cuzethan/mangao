@@ -12,7 +12,7 @@ export default function NavBar() {
                     </div>
                     </Link>
                 </li>
-                <Link to="/signup" className="ml-auto border-2 border-white rounded-md p-2 hover:bg-gray-900">
+                <Link to="/login" className="ml-auto border-2 border-white rounded-md p-2 hover:bg-gray-900">
                     <li>Login</li>
                 </Link>
                 <Link to="/signup" className="border-2 border-white rounded-md p-2 hover:bg-gray-900">

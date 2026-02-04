@@ -101,7 +101,7 @@ export default function Signup() {
             </Link>
             <div className="flex flex-col items-center justify-center gap-6">
                 <h1 className="text-center text-8xl">Signup</h1>
-                <p className="text-lg">Already a member? <Link to="/" className="text-sky-300">Log in here </Link></p>
+                <p className="text-lg">Already a member? <Link to="/login" className="text-sky-300">Log in here </Link></p>
                 <div className="border-3 rounded-xl w-3/5 p-10">
                     <form method="post" className="text-2xl flex flex-col gap-5" onSubmit={handleSubmit}>
                         <label>
