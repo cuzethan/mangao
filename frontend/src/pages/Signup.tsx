@@ -78,14 +78,14 @@ export default function Signup() {
         setHasNum(number);
         setHasSymbol(symbol);
         setHasMinChar(minChar);
-
-        const isAllValid = lower && upper && symbol && minChar && number;
-        setPWMessage(!isAllValid);
     }
 
     useEffect(() => {
         if (password.length <= 2) setPWMessage(false);
-        else checkPWConditions(password);
+        else {
+            setPWMessage(true)
+            checkPWConditions(password);
+        }
     }, [password])
 
     useEffect(() => {
@@ -102,7 +102,7 @@ export default function Signup() {
             <div className="flex flex-col items-center justify-center gap-6">
                 <h1 className="text-center text-8xl">Signup</h1>
                 <p className="text-lg">Already a member? <Link to="/" className="text-sky-300">Log in here </Link></p>
-                <div className="border border-3 rounded-xl w-3/5 p-10">
+                <div className="border-3 rounded-xl w-3/5 p-10">
                     <form method="post" className="text-2xl flex flex-col gap-5" onSubmit={handleSubmit}>
                         <label>
                             Username:  <input type="text" className="border p-1 rounded-lg w-full"

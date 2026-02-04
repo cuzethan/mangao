@@ -7,6 +7,7 @@ import './index.css'
 import App from './pages/App.tsx'
 import Home from './pages/Home.tsx'
 import Signup from './pages/Signup.tsx'
+import Login from './pages/Login.tsx'
 
 const router = createBrowserRouter([
   { index: true, Component: Home },
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     Component: Signup,
     path: "/signup"
+  },
+  {
+    Component: Login,
+    path: "/login"
   }
 ]);
 
