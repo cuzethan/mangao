@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { Link, useNavigate } from "react-router"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { baseURL } from '../constants'
 
 export default function Login() {
@@ -25,12 +25,12 @@ export default function Login() {
         setFieldIsEmpty(false);
 
         try {
-            const response = await axios.post(`${authURL}/login`, 
-                { username, password },
-                { withCredentials: true }
-            )
+            await axios.post(`${authURL}/login`, { username, password })
             setInvalidLogin(false);
-        } catch { setInvalidLogin(true) }
+            navigate('/app')
+        } catch (err) { 
+            setInvalidLogin(true) 
+        }
     }
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>, setValue: React.Dispatch<React.SetStateAction<string>>) {

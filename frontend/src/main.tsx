@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
+import axios from 'axios';
 
 import './index.css'
 import App from './pages/App.tsx'
@@ -24,6 +25,8 @@ const router = createBrowserRouter([
     path: "/login"
   }
 ]);
+
+axios.defaults.withCredentials = true;
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

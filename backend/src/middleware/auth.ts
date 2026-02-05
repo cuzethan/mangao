@@ -1,25 +1,26 @@
 import type { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import type { JwtPayload } from 'jsonwebtoken';
+import type { JwtPayload } from 'jsonwebtoken'
 import CONFIG from '../config/env.ts'
 
-export interface UserPayload extends JwtPayload {
-    username: string;
+interface UserRequest extends Request {
+    user?: JwtPayload
 }
 
-export interface AuthRequest extends Request {
-    user?: UserPayload;
-}
+export function authenticateToken(req: UserRequest, res: Response, next: NextFunction) {
+    const { accessToken, csrfToken } = req.cookies
+    
+    let csrfTokenAlt;
+    const header = req.headers['X-CSRF-TOKEN'];
+    if (header && typeof header == "string") { 
+        csrfTokenAlt = header.split(' ') 
+    }
+    
+    if (csrfToken !== csrfTokenAlt)  return res.sendStatus(403);
 
-export function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token == null) return res.sendStatus(401)
-
-    jwt.verify(token, CONFIG.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403)
-        req.user = user as UserPayload;
+    jwt.verify(accessToken, CONFIG.ACCESS_TOKEN_SECRET, {}, (err, decoded) => {
+        if (err) return res.sendStatus(401)
+        req.user = decoded as JwtPayload;
         next()
     })
 }
