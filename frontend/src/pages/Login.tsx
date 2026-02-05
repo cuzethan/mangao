@@ -9,11 +9,30 @@ export default function Login() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [fieldIsEmpty, setFieldIsEmpty] = useState(false);
+    const [invalidLogin, setInvalidLogin] = useState(false)
 
     const authURL = baseURL + "/auth"
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        //login
+        e.preventDefault();
+
+        if (!(username && password)) {
+            setFieldIsEmpty(true);
+            return;
+        }
+
+        setFieldIsEmpty(false);
+
+        try {
+            const response = await axios.post(`${authURL}/login`, 
+                { username, password },
+                { withCredentials: true }
+            )
+            setInvalidLogin(false);
+            console.log("Works!")
+
+        } catch { setInvalidLogin(true) }
     }
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>, setValue: React.Dispatch<React.SetStateAction<string>>) {
@@ -22,15 +41,6 @@ export default function Login() {
             setValue(value.trim())
         }
     }
-
-    useEffect(() => {
-        if (password.length <= 2) setPWMessage(false);
-    }, [password])
-
-    useEffect(() => {
-        if (username.length > 2 && username.length < 8) setUserMessage(true);
-        else setUserMessage(false);
-    }, [username])
 
     return (
         <div className="h-screen p-6 text-white font-bbh flex flex-col gap-5">
@@ -51,7 +61,9 @@ export default function Login() {
                             Password: <input type="password" className="border p-1 rounded-lg w-full"
                             value={password} onChange={(e) => handleChange(e, setPassword)}/>
                         </label>
-                        <button type="submit">Login</button>
+                        {fieldIsEmpty && <p className="text-2xl text-red-500">One or both fields are empty.</p>}
+                        {invalidLogin && <p className="text-2xl text-red-500">Login is invalid. Try again.</p>}
+                        <button type="submit" className="border p-1 rounded-lg hover:bg-gray-950 cursor-pointer">Login</button>
                     </form>
                 </div>
             </div>

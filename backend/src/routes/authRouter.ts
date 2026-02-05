@@ -18,7 +18,6 @@ router.get('/usernameCheck/:username', async (req, res) => {
     const username = req.params.username
     const query = `SELECT * FROM users WHERE username = $1`
     const user = (await sendQuery(query, [username])).rows[0]
-    console.log(user)
     if(user) res.status(200).send(false) //notifies user already exists
     else res.status(200).send(true)
 })
@@ -55,34 +54,28 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body
     const query = `SELECT * FROM users WHERE username = $1`
     const user = (await sendQuery(query, [username])).rows[0]
-    console.log(user)
-    if (user == null) {
-        return res.status(400).send("Cannot find user")
-    }
-    if (await compare(password, user.password_hashed)) {
-        const userData = { userID: user.id }
-        const accessToken = jwt.sign(userData, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-        const refreshToken = crypto.randomBytes(40).toString('hex')
-        const expireDate = new Date()
-        expireDate.setDate(expireDate.getDate() + 7)
-        try {
-            const query = `INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)`
-            const values = [user.id, refreshToken, expireDate]
-            await sendQuery(query, values)
-        } catch (err) {
-            console.log(err)
-            res.status(500).send()
-        }
-        // send tokens as cookies
-        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'})
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax', path: '/refresh' })
-        const csrfToken = crypto.randomBytes(32).toString('hex');
-        res.cookie('csrfToken', csrfToken, { secure: true, sameSite: 'lax' });
+    if (user == null) return res.status(400).send("Login has failed.");
 
-        res.json({ message: "Logged in", user: user.username });
-    } else {
-        res.send('Login failed');
-    }
+    const match = await compare(password, user.password_hashed);
+    if (!match) return res.status(400).send('Login has failed.');
+
+    const userData = { userID: user.id }
+    const accessToken = jwt.sign(userData, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    const refreshToken = crypto.randomBytes(40).toString('hex')
+    const expireDate = new Date()
+    expireDate.setDate(expireDate.getDate() + 7)
+    try {
+        const query = `INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)`
+        const values = [user.id, refreshToken, expireDate]
+        await sendQuery(query, values)
+    } catch  { res.status(500).send()  }
+    // send tokens as cookies
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'})
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax', path: '/refresh' })
+    const csrfToken = crypto.randomBytes(32).toString('hex');
+    res.cookie('csrfToken', csrfToken, { secure: true, sameSite: 'lax' });
+
+    res.status(200).json({ message: "Logged in", user: user.username });
 })
 
 router.get('/refresh', async (req, res) => {

@@ -49,7 +49,7 @@ export default function Signup() {
                 data: { username, password }
             });
             if (response.status === 201) {
-                navigate('/')
+                navigate('/login')
             }
             if (response.status === 500) {
                 setInternalErr(true);
