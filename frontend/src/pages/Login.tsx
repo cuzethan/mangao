@@ -30,8 +30,6 @@ export default function Login() {
                 { withCredentials: true }
             )
             setInvalidLogin(false);
-            console.log("Works!")
-
         } catch { setInvalidLogin(true) }
     }
 
