@@ -62,7 +62,7 @@ export default function Login() {
                         {fieldIsEmpty && <p className="text-2xl text-red-500">One or both fields are empty.</p>}
                         {invalidLogin && <p className="text-2xl text-red-500">Login is invalid. Try again.</p>}
                         <button type="submit" className="border p-1 rounded-lg hover:bg-gray-950 cursor-pointer">Login</button>
-                    </form>
+                </form>
                 </div>
             </div>
         </div>

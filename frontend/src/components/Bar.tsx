@@ -23,7 +23,7 @@ export default function Bar({filters, onFilterChange, onMangaAdded}: BarProps) {
     } 
 
     return (
-        <div className="font-nunito my-4 flex gap-4 items-center">
+        <div className="font-nunito my-4 flex gap-4 items-center text-2xl">
             <form onSubmit={handleSubmit} className="border-solid border-2 border-white rounded-md p-2">
                 <input type="text" placeholder="Search..." className="focus:outline-none"/>
             </form>
@@ -37,7 +37,7 @@ export default function Bar({filters, onFilterChange, onMangaAdded}: BarProps) {
                 <input type="checkbox" name="hold"
                 checked={filters.hold} onChange={onFilterChange}/> Hold
             </label>
-            <button type="button" className="text-white hover:bg-gray-900 border-solid border-2 border-white rounded-md p-2 ml-auto"
+            <button type="button" className="text-white hover:bg-gray-900 border-solid border-2 border-white rounded-md p-2 ml-auto cursor-pointer"
             onClick={() => setOpen(true)}>
                 ADD MANGA
             </button>
