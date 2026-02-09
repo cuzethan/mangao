@@ -137,7 +137,7 @@ export default function Signup() {
                                     ? "hover:bg-gray-950 cursor-pointer" 
                                     : "cursor-not-allowed"
                             }`}
-                        >Submit Form
+                        >Sign Up
                         </button>
                     </form>
                 </div>
