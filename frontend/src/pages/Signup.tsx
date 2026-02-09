@@ -101,14 +101,14 @@ export default function Signup() {
             </Link>
             <div className="flex flex-col items-center justify-center gap-6">
                 <h1 className="text-center text-8xl">Signup</h1>
-                <p className="text-lg">Already a member? <Link to="/login" className="text-sky-300">Log in here </Link></p>
+                <p className="text-lg">Already a member? <Link to="/login" className="text-sky-300">Log in here!</Link></p>
                 <div className="border-3 rounded-xl w-3/5 p-10">
                     <form method="post" className="text-2xl flex flex-col gap-5" onSubmit={handleSubmit}>
                         <label>
                             Username:  <input type="text" className="border p-1 rounded-lg w-full"
                             value={username} onChange={(e) => handleChange(e, setUsername)}/>
                         </label>
-                        {showUserMessage && <p className="text-2xl text-red-500">Make sure username contains at least 8 characters</p>}
+                        {showUserMessage && <p className="text-2xl text-red-500">Make sure username contains at least 8 characters.</p>}
                         <label>
                             Password: <input type="password" className="border p-1 rounded-lg w-full"
                             value={password} onChange={(e) => handleChange(e, setPassword)}/>

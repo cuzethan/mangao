@@ -15,8 +15,16 @@ function MangaCard({title, status, imageURL, doOnDelete}: CardProps) {
     async function handleClick (e: React.FormEvent<HTMLButtonElement>) {
         e.preventDefault()
         
+        const csrfToken = document.cookie.split('=')[1]
         try {
-            const res = await axios.delete(`${mangaURL}/deleteManga/${title}`)
+            const res = await axios.delete(
+                `${mangaURL}/deleteManga/${title}`,
+                {
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                }
+            )
             if (res.status === 201) { // api status code, not manga status
                 doOnDelete()
             }

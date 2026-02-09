@@ -19,9 +19,17 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
 
         const formData = new FormData(form)
         const data = Object.fromEntries(formData.entries())
+        const csrfToken = document.cookie.split('=')[1]
             
         try {
-            await axios.post(`${mangaURL}/addManga`, data)
+            await axios.post(`${mangaURL}/addManga`, 
+                data,
+                {
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                }
+            )
             onSuccess();
             closeModal();
             setDisplayError(false);
@@ -35,7 +43,7 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
     return (
         <form method="post" onSubmit={handleSubmit} className="text-black flex flex-col gap-2">
             <label>
-                Title:  <input name="title" className="border p-1 rounded-lg w-7/8"/>
+                Title:  <input name="title" className="border p-1 rounded-lg w-full"/>
             </label>
             <label>
                 Status: <select name="status" className="border p-1 rounded-lg">
@@ -46,7 +54,7 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
                 </select>
             </label>
             <label>
-                Image URL: <input name="imageurl" className="border p-1 rounded-lg w-60"
+                Image URL: <input name="imageurl" className="border p-1 rounded-lg"
                 placeholder="Leave empty for default..."/>
             </label>
             {displayError && <p className="text-sm text-red-600">{errorMessage}</p>}
