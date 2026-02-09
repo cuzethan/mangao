@@ -1,9 +1,11 @@
 import express from 'express'
 import { sendQuery } from '../config/db.ts'
 
+import { validateSession } from '../middleware/auth.ts'
+
 const router = express.Router()
 
-router.get('/getMangaList', async (req, res) => {
+router.get('/getMangaList', validateSession, async (req, res) => {
     const filters = req.query
     const activeFilters = []
     for (const [key, value] of Object.entries(filters)) {
@@ -24,7 +26,7 @@ router.get('/getMangaList', async (req, res) => {
     }
 })
 
-router.post('/addManga', async (req, res) => {
+router.post('/addManga', validateSession, async (req, res) => {
     const { title, status, imageurl } = req.body;
     if (!title) {
         return res.status(400).send('Make sure you input a title.');
@@ -49,28 +51,7 @@ router.post('/addManga', async (req, res) => {
     }
 });
 
-router.delete('/deleteManga/:title', async (req, res) => {
-    const title = req.params.title
-    try {
-        const query = "DELETE FROM mangas WHERE title = $1";
-        await sendQuery(query, [title])
-    } catch (err) {
-        console.log(err)
-        res.status(500).send('Internal Server Error');
-    }
-
-    //validate deletion
-    try {
-        const query = "SELECT * FROM mangas WHERE title = 'asdf'";
-        const data = await sendQuery(query)
-        if (!data.rows[0]) res.status(201).send('Deletion Successful!');
-    } catch (err) {
-        console.log(err)
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-router.delete('/deleteManga/:title', async (req, res) => {
+router.delete('/deleteManga/:title', validateSession, async (req, res) => {
     const title = req.params.title
     try {
         const query = "DELETE FROM mangas WHERE title = $1";

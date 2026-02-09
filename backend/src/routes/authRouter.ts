@@ -2,17 +2,20 @@ import express from 'express'
 import { hash, compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import CONFIG from '../config/env.ts'
-import cookieParser from 'cookie-parser'
 import crypto from 'crypto'
 
 import { sendQuery } from '../config/db.ts'
+import { validateSession } from '../middleware/auth.ts'
 
 const router = express.Router()
-router.use(cookieParser())
 
 /* router.get('/users', authenticateToken, (req: AuthRequest, res) => { //verify through token header (no need for username in body)
     res.json(users.filter(user => user.username === req.user?.username))
 }) */
+
+router.get('/verify', validateSession, (req, res) => {
+    res.status(200).send("Sucessfully verified")
+})
 
 router.get('/usernameCheck/:username', async (req, res) => {
     const username = req.params.username
@@ -71,7 +74,7 @@ router.post('/login', async (req, res) => {
     } catch  { res.status(500).send()  }
     // send tokens as cookies
     res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'})
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax', path: '/refresh' })
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax', path: '/api/auth/refresh' })
     const csrfToken = crypto.randomBytes(32).toString('hex');
     res.cookie('csrfToken', csrfToken, { secure: true, sameSite: 'lax' });
 
@@ -80,6 +83,8 @@ router.post('/login', async (req, res) => {
 
 router.get('/refresh', async (req, res) => {
     const { refreshToken } = req.cookies;
+
+    console.log(req.cookies)
 
     if (!refreshToken) return res.status(401).send("No refresh token");
 
@@ -91,8 +96,9 @@ router.get('/refresh', async (req, res) => {
         const user = result[0];
         const accessToken = jwt.sign({ userID: user.id }, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
         res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'});
-    } catch (err) {
-        res.send(err)
+        res.status(201).send("Refresh successful!")
+    } catch {
+        res.status(500).send("Internal Server Error")
     }
 
 })
