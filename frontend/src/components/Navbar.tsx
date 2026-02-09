@@ -12,7 +12,7 @@ export default function NavBar() {
 
      async function logout() {
         try {
-            await axios.delete( `${authURL}/logout`);
+            await axios.delete(`${authURL}/refresh/logout`);
             navigate('/');
         } catch (err) {
             if (err instanceof AxiosError)

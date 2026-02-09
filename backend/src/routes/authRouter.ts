@@ -9,10 +9,6 @@ import { validateSession } from '../middleware/auth.ts'
 
 const router = express.Router()
 
-/* router.get('/users', authenticateToken, (req: AuthRequest, res) => { //verify through token header (no need for username in body)
-    res.json(users.filter(user => user.username === req.user?.username))
-}) */
-
 router.get('/verify', validateSession, (req, res) => {
     res.status(200).send("Sucessfully verified")
 })
@@ -77,7 +73,7 @@ router.post('/login', async (req, res) => {
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax', path: '/api/auth/refresh' })
     const csrfToken = crypto.randomBytes(32).toString('hex');
     res.cookie('csrfToken', csrfToken, { secure: true, sameSite: 'lax' });
-
+    
     res.status(200).json({ message: "Logged in", user: user.username });
 })
 
@@ -103,8 +99,7 @@ router.get('/refresh', async (req, res) => {
 
 })
 
-
-router.delete('/logout', async (req, res) => {
+router.delete('/refresh/logout', async (req, res) => {
     const { refreshToken } = req.cookies
 
     try {
@@ -115,7 +110,12 @@ router.delete('/logout', async (req, res) => {
     }
     
     res.clearCookie('accessToken')
-    res.clearCookie('refreshToken')
+    res.clearCookie('refreshToken', { 
+        httpOnly: true, 
+        secure: true, 
+        sameSite: 'lax', 
+        path: '/api/auth/refresh' 
+    })
     res.clearCookie('csrfToken')
 
     res.status(200).send("Sucessfully logged out")
