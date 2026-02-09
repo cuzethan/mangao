@@ -3,11 +3,7 @@ import jwt from 'jsonwebtoken'
 import type { JwtPayload } from 'jsonwebtoken'
 import CONFIG from '../config/env.ts'
 
-interface UserRequest extends Request {
-    user?: JwtPayload
-}
-
-export function validateSession(req: UserRequest, res: Response, next: NextFunction) {
+export function validateSession(req: Request, res: Response, next: NextFunction) {
     const { accessToken = undefined, csrfToken = undefined } = req.cookies
 
     if (csrfToken === undefined) return res.status(403).send("No cookies! Need to log in!");
@@ -23,8 +19,9 @@ export function validateSession(req: UserRequest, res: Response, next: NextFunct
             {
                 action: "refreshReq",
                 msg: "Token expired or invalid!"
-            }) //notify refresh token
-        req.user = decoded as JwtPayload;
+            }
+        ) //notify refresh token
+        req.user = decoded as JwtPayload
         next()
     })
 }

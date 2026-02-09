@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS refresh_tokens;
 DROP TABLE IF EXISTS mangas;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_manga_ref;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -9,9 +10,16 @@ CREATE TABLE users (
 );
 
 CREATE TABLE mangas (
-    title VARCHAR(255) PRIMARY KEY NOT NULL,
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
     status VARCHAR(255) NOT NULL,
     imageURL TEXT
+);
+
+CREATE TABLE user_manga_ref (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    manga_id INTEGER REFERENCES mangas(id) ON DELETE CASCADE
 );
 
 CREATE TABLE refresh_tokens (
@@ -20,7 +28,3 @@ CREATE TABLE refresh_tokens (
     token TEXT NOT NULL,
     expires_at TIMESTAMP NOT NULL
 );
-
-INSERT INTO mangas VALUES ('One Piece', 'completed', NULL);
-INSERT INTO mangas VALUES ('Naruto', 'planned', NULL);
-INSERT INTO mangas VALUES ('Bleach', 'planned', NULL);

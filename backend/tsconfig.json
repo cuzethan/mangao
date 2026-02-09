@@ -42,7 +42,7 @@
     "skipLibCheck": true,
 
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
   },
   "include": ["src/**/*"]
 }
