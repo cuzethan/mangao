@@ -2,14 +2,14 @@ import axios from 'axios'
 import { useState } from 'react'
 import { baseURL } from '../constants'
 
-interface AddMangaFormProps {
+interface AddMangaManualProps {
     closeModal: () => void
     onSuccess: () => void
 }
 
 const mangaURL = baseURL + "/mangas"
 
-export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps) {
+export default function AddMangaMnaual({closeModal, onSuccess}: AddMangaManualProps) {
     const [errorMessage, setErrorMessage] = useState('')
     const [displayError, setDisplayError] = useState(false)
 
@@ -43,10 +43,10 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
     return (
         <form method="post" onSubmit={handleSubmit} className="text-black flex flex-col gap-2">
             <label>
-                Title:  <input name="title" className="border p-1 rounded-lg w-full"/>
+                Title:  <input name="title" className="border-2 border-black p-1 rounded-lg w-full"/>
             </label>
             <label>
-                Status: <select name="status" className="border p-1 rounded-lg">
+                Status: <select name="status" className="border-2 border-black p-1 rounded-lg">
                     <option value="completed">Completed</option>
                     <option value="reading">Reading</option>
                     <option value="planned">Planned</option>
@@ -54,11 +54,11 @@ export default function AddMangaForm({closeModal, onSuccess}: AddMangaFormProps)
                 </select>
             </label>
             <label>
-                Image URL: <input name="imageurl" className="border p-1 rounded-lg"
+                Image URL: <input name="imageurl" className="border-2 border-black p-1 rounded-lg"
                 placeholder="Leave empty for default..."/>
             </label>
             {displayError && <p className="text-sm text-red-600">{errorMessage}</p>}
-            <button type="submit" className="border p-1 rounded-lg hover:bg-black/5">Submit Form</button>
+            <button type="submit" className="border-2 border-black p-1 rounded-lg hover:bg-black/5">Submit Form</button>
         </form>
     )
 }

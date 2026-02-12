@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import Modal from './Modal'
-import AddMangaForm from './AddMangaForm'
+import AddMangaManual from './AddMangaManual'
+import AddMangaAuto from './AddMangaAuto'
+import AddTypeChoose from './AddTypeChoose'
 
 interface FilterState {
     completed: boolean,
@@ -16,11 +18,21 @@ interface BarProps {
 }
 
 export default function Bar({filters, onFilterChange, onMangaAdded}: BarProps) {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
+    const [showButtons, setShowButtons] = useState(true);
+    const [showManualForm, setManualForm] = useState(false);
+    const [showAutoForm, setAutoForm] = useState(false);
     
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
     } 
+
+    function handleClose() {
+        setOpen(false);
+        setManualForm(false);
+        setAutoForm(false);
+        setShowButtons(true);
+    }
 
     return (
         <div className="font-nunito my-4 flex gap-4 items-center text-2xl">
@@ -41,8 +53,11 @@ export default function Bar({filters, onFilterChange, onMangaAdded}: BarProps) {
             onClick={() => setOpen(true)}>
                 ADD MANGA
             </button>
-            <Modal open={open} onClose = {() => setOpen(false)}>
-                <AddMangaForm closeModal={() => setOpen(false)} onSuccess={onMangaAdded}/>
+            <Modal open={open} onClose={() => handleClose()}>
+                {showButtons && <AddTypeChoose hideButton={() => setShowButtons(false)} showAuto={() => setAutoForm(true)}
+                showManual={() => setManualForm(true)}/>}
+                {showManualForm && <AddMangaManual closeModal={() => handleClose()} onSuccess={onMangaAdded}/>}
+                {showAutoForm && <AddMangaAuto/>}
             </Modal>
         </div>
     )
