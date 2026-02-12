@@ -3,6 +3,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import mangaRouter from './routes/mangaRouter.ts'
 import authRouter from './routes/authRouter.ts'
+import testRouter from './routes/testRouter.ts'
 
 
 export default function (app: express.Application) {
@@ -18,4 +19,5 @@ export default function (app: express.Application) {
     app.get('/', (req, res) => { res.send("mangao backend is running :)") })
     app.use('/api/mangas', mangaRouter)
     app.use('/api/auth', authRouter)
+    app.use('/api/test', testRouter)
 }
