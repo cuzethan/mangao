@@ -18,8 +18,20 @@ export default function AddMangaAuto() {
         const formData = new FormData(form)
         const data = Object.fromEntries(formData.entries())
         const csrfToken = document.cookie.split('=')[1]
-        
-        console.log(data)
+    
+        try {
+            const result = await axios.get(`${testURL}/search/${data.title}`, 
+                {
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                }
+            )
+            console.log(result.data)
+            form.reset();
+        } catch (err: any) {
+            console.log("BROKE")
+        }
     }
 
     return (
