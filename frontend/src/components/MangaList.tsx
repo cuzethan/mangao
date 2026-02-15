@@ -1,7 +1,8 @@
 import MangaCard from "./MangaCard"
+import type { Manga } from "../constants"
 
 interface MangaListProps {
-    mangas: any[];
+    mangas: Manga[];
     onMangaDelete: () => void;
 }
 
