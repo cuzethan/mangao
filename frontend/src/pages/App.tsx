@@ -4,8 +4,11 @@ import NavBar from '../components/Navbar'
 import axios, { AxiosError } from 'axios'
 import { useState, useEffect, useCallback } from 'react'
 import { baseURL } from '../constants'
+import { useNavigate } from 'react-router'
 
 function App() {
+  const navigate = useNavigate()
+
   const mangaURL = baseURL + '/mangas'
   const authURL = baseURL + '/auth'
   const [validAccess, setValidAccess] = useState(false)
@@ -28,8 +31,7 @@ function App() {
 
   async function handleTokenRefresh() {
     try {
-      const test = await axios.get(`${authURL}/refresh`)
-      console.log(test)
+      await axios.get(`${authURL}/refresh`)
       return true;
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -39,7 +41,7 @@ function App() {
             return false;
           }
           if (res.status == 403) { //refresh token expired
-            //redirect to login
+            navigate('/login')
           }
         }
         return false;
