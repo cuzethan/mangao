@@ -41,22 +41,23 @@ export default function Signup() {
         } 
 
         setPwNotEqual(false)
-        const result = await axios.get(`${authURL}/usernameCheck/${username}`)
-        if (result.data) { //user does not exist yet
-            const response = await axios({
-                method: "post",
-                url: authURL+"/signup",
-                data: { username, password }
-            });
-            if (response.status === 201) {
-                navigate('/login')
-            }
-            if (response.status === 500) {
-                setInternalErr(true);
-            }
-        } else {
-            setUserDNEMsg(true)
-        } 
+        try {
+            const result = await axios.get(`${authURL}/usernameCheck/${username}`)
+            if (result.data) { //user does not exist yet
+                const response = await axios({
+                    method: "post",
+                    url: authURL+"/signup",
+                    data: { username, password }
+                });
+                if (response.status === 201) {
+                    navigate('/login')
+                }
+            } else {
+                setUserDNEMsg(true)
+            } 
+        } catch {
+            setInternalErr(true)
+        }
     }
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>, setValue: React.Dispatch<React.SetStateAction<string>>) {

@@ -1,15 +1,14 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { baseURL } from '../constants'
-
-interface AddMangaAutoProps {
-    closeModal: () => void
-    onSuccess: () => void
-}
+import MangaSelectList from './MangaSelectList'
+import type { MangaDexManga } from '../constants'
 
 const testURL = baseURL + "/test"
 
 export default function AddMangaAuto() {
+    const [mangaDexData, setMangaDexData] = useState<MangaDexManga[]>([])
+    const [showRecs, setShowRecs] = useState(false)
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -28,20 +27,24 @@ export default function AddMangaAuto() {
                 }
             )
             console.log(result.data)
+            setMangaDexData(result.data)
+            setShowRecs(true)
             form.reset();
         } catch (err: any) {
+            setShowRecs(false)
             console.log("BROKE")
         }
     }
 
     return (
-        <div className="text-black">
-            <form method="post" onSubmit={handleSubmit} className="flex flex-col gap-2">
-                <div>
-                    Title: <input name="title" className="border-2 border-black rounded-lg gap-2"/>
+        <div className="text-black flex flex-col gap-3">
+            <form method="post" onSubmit={handleSubmit}>
+                <div className="flex gap-2">
+                    Title: <input name="title" className="border-2 border-black rounded-lg"/>
+                    <button type="submit" className="border-2 border-black rounded-lg hover:bg-black/5">Search Manga</button>
                 </div>
-                <button type="submit" className="border-2 border-black p-1 rounded-lg hover:bg-black/5">Search Manga</button>
             </form>
+            {showRecs && <MangaSelectList mangas={mangaDexData}/>}
         </div>
     )
 }

@@ -8,3 +8,10 @@ export type Manga = {
     status: Status
     imageurl: string
 }
+
+export type MangaDexManga = {
+    mangadex_id: string,
+    title: string,
+    imageurl: string
+    authors: string[]
+}
