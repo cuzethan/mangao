@@ -6,12 +6,12 @@ export type Manga = {
     id: number,
     title: string
     status: Status
-    imageurl: string
+    image_url: string
 }
 
 export type MangaDexManga = {
     mangadex_id: string,
     title: string,
-    imageurl: string
+    image_url: string
     authors: string[]
 }

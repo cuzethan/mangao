@@ -13,13 +13,18 @@ CREATE TABLE mangas (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     status VARCHAR(255) NOT NULL,
-    imageURL TEXT
+    image_url TEXT,
+    max_chapters INTEGER,
+    tracking BOOLEAN,
+    mangadex_id TEXT,
+    last_checked TIMESTAMP
 );
 
 CREATE TABLE user_manga_ref (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    manga_id INTEGER REFERENCES mangas(id) ON DELETE CASCADE
+    manga_id INTEGER REFERENCES mangas(id) ON DELETE CASCADE,
+    cur_chapter INTEGER
 );
 
 CREATE TABLE refresh_tokens (
