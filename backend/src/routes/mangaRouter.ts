@@ -15,7 +15,7 @@ router.get('/getMangaList', validateSession, async (req, res) => {
     }
 
     try {
-        let query = 'SELECT user_manga_ref.id, mangas.title, mangas.status, mangas.imageurl FROM ' +
+        let query = 'SELECT user_manga_ref.id, mangas.title, mangas.status, mangas.image_url FROM ' +
         'user_manga_ref JOIN mangas ON manga_id = mangas.id WHERE user_id = $1'
         if (activeFilters.length > 0) {
             const moreQuery = activeFilters.join(' OR ')
@@ -30,20 +30,20 @@ router.get('/getMangaList', validateSession, async (req, res) => {
 })
 
 router.post('/addManga', validateSession, async (req, res) => {
-    const { title, status, imageurl } = req.body;
+    const { title, status, image_url } = req.body;
     const user_id = req.user?.userID
 
     if (!title) {
         return res.status(400).send('Make sure you input a title.');
     }
 
-    if (imageurl && !(imageurl.startsWith('data:image/') || imageurl.startsWith('http'))) {
+    if (image_url && !(image_url.startsWith('data:image/') || image_url.startsWith('http'))) {
         return res.status(400).send('Please provide a valid image link.');
     }
 
     try {
-        let query = "INSERT INTO mangas (title, status, imageurl) VALUES ($1, $2, $3) RETURNING id";
-        const values = [title, status, imageurl || null]
+        let query = "INSERT INTO mangas (title, status, image_url) VALUES ($1, $2, $3) RETURNING id";
+        const values = [title, status, image_url || null]
         const result = await sendQuery(query, values)
         const manga_id = result.rows[0].id
 

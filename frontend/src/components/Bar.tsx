@@ -14,10 +14,10 @@ interface FilterState {
 interface BarProps {
     filters: FilterState;
     onFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onMangaAdded: () => void;
+    refreshMangaList: () => void;
 }
 
-export default function Bar({filters, onFilterChange, onMangaAdded}: BarProps) {
+export default function Bar({filters, onFilterChange, refreshMangaList}: BarProps) {
     const [open, setOpen] = useState(false);
     const [showButtons, setShowButtons] = useState(true);
     const [showManualForm, setManualForm] = useState(false);
@@ -56,8 +56,14 @@ export default function Bar({filters, onFilterChange, onMangaAdded}: BarProps) {
             <Modal open={open} onClose={() => handleClose()}>
                 {showButtons && <AddTypeChoose hideButton={() => setShowButtons(false)} showAuto={() => setAutoForm(true)}
                 showManual={() => setManualForm(true)}/>}
-                {showManualForm && <AddMangaManual closeModal={() => handleClose()} onSuccess={onMangaAdded}/>}
-                {showAutoForm && <AddMangaAuto/>}
+                {showManualForm && <AddMangaManual onAddingManga={() => {
+                    handleClose();
+                    refreshMangaList();
+                }}/>}
+                {showAutoForm && <AddMangaAuto closeModalAndRefresh={() => {
+                    handleClose();
+                    refreshMangaList();
+                }}/>}
             </Modal>
         </div>
     )

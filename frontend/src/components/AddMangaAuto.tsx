@@ -6,7 +6,11 @@ import type { MangaDexManga } from '../constants'
 
 const testURL = baseURL + "/test"
 
-export default function AddMangaAuto() {
+interface AddMangaAutoProps {
+    closeModalAndRefresh: () => void
+}
+
+export default function AddMangaAuto({closeModalAndRefresh}: AddMangaAutoProps) {
     const [mangaDexData, setMangaDexData] = useState<MangaDexManga[]>([])
     const [showRecs, setShowRecs] = useState(false)
 
@@ -41,10 +45,10 @@ export default function AddMangaAuto() {
             <form method="post" onSubmit={handleSubmit}>
                 <div className="flex gap-2">
                     Title: <input name="title" className="border-2 border-black rounded-lg"/>
-                    <button type="submit" className="border-2 border-black rounded-lg hover:bg-black/5">Search Manga</button>
+                    <button type="submit" className="border-2 border-black rounded-lg hover:bg-black/5 px-2 cursor-pointer">Search Manga</button>
                 </div>
             </form>
-            {showRecs && <MangaSelectList mangas={mangaDexData}/>}
+            {showRecs && <MangaSelectList mangas={mangaDexData} closeModalAndRefresh={closeModalAndRefresh}/>}
         </div>
     )
 }

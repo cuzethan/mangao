@@ -74,6 +74,7 @@ function App() {
               }
             }
           }
+          if (res.status == 500) setErrPageMsg("500 INTERNAL SERVER ERROR")
         }
       }
     }
@@ -89,8 +90,8 @@ function App() {
       <div>
         <NavBar/>
         <h1 className="text-7xl pt-4">WELCOME TO MANGAO!!!</h1>
-        <Bar filters={filters} onFilterChange={handleCheckboxChange} onMangaAdded={handleMangaRefresh}></Bar>
-        <MangaList mangas={mangaData} onMangaDelete={handleMangaRefresh} />
+        <Bar filters={filters} onFilterChange={handleCheckboxChange} refreshMangaList={handleMangaRefresh}></Bar>
+        <MangaList mangas={mangaData} refreshMangaList={handleMangaRefresh} />
       </div>
     )
   }

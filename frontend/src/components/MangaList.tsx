@@ -3,13 +3,13 @@ import type { Manga } from "../constants"
 
 interface MangaListProps {
     mangas: Manga[];
-    onMangaDelete: () => void;
+    refreshMangaList: () => void;
 }
 
-function MangaList({mangas, onMangaDelete}: MangaListProps) {
+function MangaList({mangas, refreshMangaList}: MangaListProps) {
     const mangaCards = mangas.map(manga => (
         <MangaCard key={manga.id} title={manga.title} status={manga.status} 
-        imageURL={manga.image_url} doOnDelete={onMangaDelete}/>
+        image_url={manga.image_url} doOnDelete={refreshMangaList}/>
     ))
 
     return (

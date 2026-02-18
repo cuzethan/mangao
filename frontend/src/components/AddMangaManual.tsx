@@ -2,14 +2,13 @@ import axios from 'axios'
 import { useState } from 'react'
 import { baseURL } from '../constants'
 
-interface AddMangaManualProps {
-    closeModal: () => void
-    onSuccess: () => void
-}
-
 const mangaURL = baseURL + "/mangas"
 
-export default function AddMangaMnaual({closeModal, onSuccess}: AddMangaManualProps) {
+interface AddMangaManualProps  {
+    onAddingManga: () => void
+}
+
+export default function AddMangaManual({onAddingManga}: AddMangaManualProps) {
     const [errorMessage, setErrorMessage] = useState('')
     const [displayError, setDisplayError] = useState(false)
 
@@ -30,8 +29,7 @@ export default function AddMangaMnaual({closeModal, onSuccess}: AddMangaManualPr
                     }
                 }
             )
-            onSuccess();
-            closeModal();
+            onAddingManga();
             setDisplayError(false);
             form.reset();
         } catch (err: any) {
