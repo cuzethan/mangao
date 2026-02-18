@@ -14,10 +14,10 @@ CREATE TABLE mangas (
     title VARCHAR(255) NOT NULL,
     status VARCHAR(255) NOT NULL,
     image_url TEXT,
-    max_chapters INTEGER,
-    tracking BOOLEAN,
+    max_chapters NUMERIC(10, 1) NOT NULL,
+    tracking BOOLEAN NOT NULL,
     mangadex_id TEXT,
-    last_checked TIMESTAMP
+    last_checked TIMESTAMP NOT NULL
 );
 
 CREATE TABLE user_manga_ref (

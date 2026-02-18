@@ -1,11 +1,12 @@
 import express from 'express'
 import axios from 'axios'
+import { validateSession } from '../middleware/auth.ts'
 
 const router = express.Router()
 
 const baseUrl = 'https://api.mangadex.org';
 
-router.get('/search/:title', async (req, res) => {
+router.get('/search/:title', validateSession, async (req, res) => {
     const title = req.params.title
     try {
         const result = await axios({
@@ -38,13 +39,13 @@ router.get('/search/:title', async (req, res) => {
                 authors
             }
         })
-            res.status(200).json(topFiveManga)
+        res.status(200).json(topFiveManga)
     } catch (err) {
         res.status(500).send("Internal Server Error")
     }
 })
 
-router.get('/getChapters/:id', async (req, res) => {
+router.get('/getChapters/:id', validateSession, async (req, res) => {
     const mangadex_id = req.params.id
     const result = await axios({
         method: 'GET',

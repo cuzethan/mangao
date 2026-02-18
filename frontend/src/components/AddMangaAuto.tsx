@@ -30,7 +30,6 @@ export default function AddMangaAuto({closeModalAndRefresh}: AddMangaAutoProps) 
                     }
                 }
             )
-            console.log(result.data)
             setMangaDexData(result.data)
             setShowRecs(true)
             form.reset();
@@ -43,8 +42,8 @@ export default function AddMangaAuto({closeModalAndRefresh}: AddMangaAutoProps) 
     return (
         <div className="text-black flex flex-col gap-3">
             <form method="post" onSubmit={handleSubmit}>
-                <div className="flex gap-2">
-                    Title: <input name="title" className="border-2 border-black rounded-lg"/>
+                <div className="flex gap-2 items-center">
+                    Title: <input name="title" className="border-2 border-black rounded-lg px-1"/>
                     <button type="submit" className="border-2 border-black rounded-lg hover:bg-black/5 px-2 cursor-pointer">Search Manga</button>
                 </div>
             </form>

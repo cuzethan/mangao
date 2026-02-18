@@ -30,20 +30,30 @@ router.get('/getMangaList', validateSession, async (req, res) => {
 })
 
 router.post('/addManga', validateSession, async (req, res) => {
-    const { title, status, image_url } = req.body;
+    const { title, 
+        status, 
+        image_url,
+        max_chapters,
+        tracking,
+        mangadex_id,
+        last_checked
+    } = req.body;
     const user_id = req.user?.userID
-
-    if (!title) {
-        return res.status(400).send('Make sure you input a title.');
-    }
+    
+    if (!title) return res.status(400).send('Make sure you input a title.');
 
     if (image_url && !(image_url.startsWith('data:image/') || image_url.startsWith('http'))) {
         return res.status(400).send('Please provide a valid image link.');
     }
 
+    const isOnlyDigits = (str: string) => { return /^\d+(\.\d+)?$/.test(str) };
+
+    if (!isOnlyDigits(max_chapters)) return res.status(400).send("Make sure the chapter number is valid. (ex. 123 or 35.5)")
+
     try {
-        let query = "INSERT INTO mangas (title, status, image_url) VALUES ($1, $2, $3) RETURNING id";
-        const values = [title, status, image_url || null]
+        let query = "INSERT INTO mangas (title, status, image_url, max_chapters, tracking, mangadex_id, last_checked) "
+        + "VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id";
+        const values = [title, status, image_url || null, max_chapters, tracking, mangadex_id || null, last_checked]
         const result = await sendQuery(query, values)
         const manga_id = result.rows[0].id
 
@@ -56,7 +66,7 @@ router.post('/addManga', validateSession, async (req, res) => {
                 res.status(403).send('Manga already exists in list!')
             }
         }
-        res.status(500).send('Internal Server Error');
+        res.status(500).send(err);
     }
 });
 

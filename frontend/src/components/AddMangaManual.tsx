@@ -18,11 +18,18 @@ export default function AddMangaManual({onAddingManga}: AddMangaManualProps) {
 
         const formData = new FormData(form)
         const data = Object.fromEntries(formData.entries())
+
+        const processedData = {
+            ...data,
+            tracking: false,
+            last_checked: new Date()
+        }
+
         const csrfToken = document.cookie.split('=')[1]
             
         try {
             await axios.post(`${mangaURL}/addManga`, 
-                data,
+                processedData,
                 {
                     headers: {
                         "X-CSRF-TOKEN": csrfToken
@@ -41,22 +48,23 @@ export default function AddMangaManual({onAddingManga}: AddMangaManualProps) {
     return (
         <form method="post" onSubmit={handleSubmit} className="text-black flex flex-col gap-2">
             <label>
-                Title:  <input name="title" className="border-2 border-black p-1 rounded-lg w-full"/>
+                Title:  <input name="title" className="border-2 border-black p-1 rounded-lg w-full px-1"/>
             </label>
-            <label>
+            <label className="flex gap-2 items-center">
                 Status: <select name="status" className="border-2 border-black p-1 rounded-lg">
                     <option value="completed">Completed</option>
                     <option value="reading">Reading</option>
                     <option value="planned">Planned</option>
                     <option value="hold">Hold</option>
                 </select>
+                # of Chapters:  <input name="max_chapters" className="border-2 border-black p-1 rounded-lg max-w-15 px-1"/>
             </label>
             <label>
-                Image URL: <input name="imageurl" className="border-2 border-black p-1 rounded-lg"
+                Image URL: <input name="image_url" className="border-2 border-black p-1 rounded-lg px-1"
                 placeholder="Leave empty for default..."/>
             </label>
             {displayError && <p className="text-sm text-red-600">{errorMessage}</p>}
-            <button type="submit" className="border-2 border-black p-1 rounded-lg hover:bg-black/5">Submit Form</button>
+            <button type="submit" className="border-2 border-black p-1 rounded-lg hover:bg-black/5 cursor-pointer px-1">Submit Form</button>
         </form>
     )
 }

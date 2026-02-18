@@ -80,8 +80,6 @@ router.post('/login', async (req, res) => {
 router.get('/refresh', async (req, res) => {
     const { refreshToken } = req.cookies;
 
-    console.log(req.cookies)
-
     if (!refreshToken) return res.status(401).send("No refresh token");
 
     try {

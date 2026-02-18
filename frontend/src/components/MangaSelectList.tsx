@@ -1,12 +1,13 @@
 import type { MangaDexManga } from '../constants'
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import { baseURL } from '../constants'
 
 interface MangaSelectCardProps {
     image_url: string,
     title: string,
-    authors: string[]
-    onSelect: () => void
+    authors: string[],
+    mangadex_id: string,
+    afterSelect: () => void
 }
 
 interface MangaSelectListProps {
@@ -14,13 +15,34 @@ interface MangaSelectListProps {
     closeModalAndRefresh: () => void
 }
 
-function MangaSelectCard({image_url, title, authors, onSelect}: MangaSelectCardProps) {
-    const mangaURL = baseURL + "/manga"
+function MangaSelectCard({image_url, title, authors, mangadex_id, afterSelect}: MangaSelectCardProps) {
+    const mangaURL = baseURL + "/mangas"
+    const testURL = baseURL + "/test"
     
     async function handleSelect() {
         const csrfToken = document.cookie.split('=')[1]
             
-        /*try {
+        try {
+            const res = await axios.get(`${testURL}/getChapters/${mangadex_id}`,
+                {
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                }
+            );
+            const chapters = res.data.sort((a: number, b: number) => a - b);
+            const max_chapters = chapters.at(-1);
+
+            const data = {
+                image_url,
+                last_checked: new Date(),
+                max_chapters,
+                status: "completed",
+                title,
+                tracking: true,
+                mangadex_id
+            };
+
             await axios.post(`${mangaURL}/addManga`, 
                 data,
                 {
@@ -28,14 +50,13 @@ function MangaSelectCard({image_url, title, authors, onSelect}: MangaSelectCardP
                         "X-CSRF-TOKEN": csrfToken
                     }
                 }
-            )
-            onAddingManga();
-            setDisplayError(false);
-            form.reset();
+            );
+            afterSelect();
         } catch (err: any) {
-            setErrorMessage(err.response.data);
-            setDisplayError(true);
-        }*/
+            if (isAxiosError(err)) {
+                console.log(err);
+            }
+        }
     }
     return (
         <button className="border-2 border-black p-1 rounded-lg cursor-pointer hover:bg-black/5 w-full min-w-xl max-w-2xl"
@@ -64,7 +85,8 @@ export default function MangaSelectList({mangas, closeModalAndRefresh}: MangaSel
                                 image_url={manga.image_url} 
                                 title={manga.title} 
                                 authors={manga.authors} 
-                                onSelect={closeModalAndRefresh}
+                                mangadex_id={manga.mangadex_id}
+                                afterSelect={closeModalAndRefresh}
                             />
                         </div>
                     ))}
