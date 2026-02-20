@@ -30,9 +30,13 @@ router.get('/search/:title', validateSession, async (req, res) => {
             const authorRelationship = manga.relationships.filter((rel: {type: string}) => rel.type === "author")   
             const authors = authorRelationship.map((author: any) => author.attributes.name)
 
+            const titleList: {en: string}[] = manga.attributes.altTitles
+            const engTitleObject = titleList.find(obj => obj.hasOwnProperty("en"))
+            console.log(data)
+
             return {
                 mangadex_id: manga.id,
-                title: manga.attributes.title.en || Object.values(manga.attributes.title)[0],
+                title: engTitleObject?.en || Object.values(manga.attributes.title)[0],
                 image_url: fileName 
                     ? `https://uploads.mangadex.org/covers/${manga.id}/${fileName}.256.jpg` 
                     : null,

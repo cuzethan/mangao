@@ -1,12 +1,17 @@
 export const baseURL = `http://localhost:${import.meta.env.VITE_PORT|| 3000}/api`
-export type Status = "completed" | "reading" | "planned" | "hold";
 export const defaultImgUrl = "src/assets/mangao.png"
+
+export type Status = "completed" | "reading" | "planned" | "hold";
 
 export type Manga = {
     id: number,
     title: string
     status: Status
     image_url: string
+    max_chapters: Number
+    tracking: boolean
+    mangadex_id: string
+    last_checked: Date
 }
 
 export type MangaDexManga = {
