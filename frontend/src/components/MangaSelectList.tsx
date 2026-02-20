@@ -4,7 +4,8 @@ import { baseURL } from '../constants'
 
 interface MangaSelectCardProps {
     image_url: string,
-    title: string,
+    main_title: string,
+    alt_title: string,
     authors: string[],
     mangadex_id: string,
     afterSelect: () => void
@@ -15,7 +16,7 @@ interface MangaSelectListProps {
     closeModalAndRefresh: () => void
 }
 
-function MangaSelectCard({image_url, title, authors, mangadex_id, afterSelect}: MangaSelectCardProps) {
+function MangaSelectCard({image_url, main_title, alt_title, authors, mangadex_id, afterSelect}: MangaSelectCardProps) {
     const mangaURL = baseURL + "/mangas"
     const testURL = baseURL + "/test"
     
@@ -31,17 +32,22 @@ function MangaSelectCard({image_url, title, authors, mangadex_id, afterSelect}: 
                 }
             );
             const chapters = res.data.sort((a: number, b: number) => a - b);
-            const max_chapters = chapters.at(-1);
+            const max_chapters = chapters.at(-1) || 1;
 
+            const tracking = max_chapters ? true : false
+            //tracking will be disabled if chapters don't exist
+            
             const data = {
                 image_url,
                 last_checked: new Date(),
                 max_chapters,
                 status: "completed",
-                title,
-                tracking: true,
+                title: main_title, //send only the main title
+                tracking,
                 mangadex_id
             };
+
+            console.log(data)
 
             await axios.post(`${mangaURL}/addManga`, 
                 data,
@@ -64,7 +70,8 @@ function MangaSelectCard({image_url, title, authors, mangadex_id, afterSelect}: 
             <div className="flex gap-3">
                 <img className="w-24 h-32 object-cover shrink-0 rounded-md" src={image_url}></img>
                 <div className="flex flex-col justify-center items-star text-left min-w-0">
-                    <h1 className="text-3xl font-bold truncate w-full">{title}</h1>
+                    <h1 className="text-3xl font-bold truncate w-full">{main_title}</h1>
+                    <h1 className="text-2xl font-bold truncate w-full">{alt_title}</h1>
                     <h1 className="text-2xl text-gray-700 truncate w-full">By: {authors?.join(", ") || "Unknown"}</h1>
                 </div>
             </div>
@@ -83,7 +90,8 @@ export default function MangaSelectList({mangas, closeModalAndRefresh}: MangaSel
                         <div key={manga.mangadex_id}>
                             <MangaSelectCard 
                                 image_url={manga.image_url} 
-                                title={manga.title} 
+                                main_title={manga.main_title} 
+                                alt_title={manga.alt_title}
                                 authors={manga.authors} 
                                 mangadex_id={manga.mangadex_id}
                                 afterSelect={closeModalAndRefresh}

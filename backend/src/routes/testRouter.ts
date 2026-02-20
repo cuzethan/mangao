@@ -30,19 +30,23 @@ router.get('/search/:title', validateSession, async (req, res) => {
             const authorRelationship = manga.relationships.filter((rel: {type: string}) => rel.type === "author")   
             const authors = authorRelationship.map((author: any) => author.attributes.name)
 
-            const titleList: {en: string}[] = manga.attributes.altTitles
-            const engTitleObject = titleList.find(obj => obj.hasOwnProperty("en"))
-            console.log(data)
+            const altTitleList: {en: string}[] = manga.attributes.altTitles
+            const default_title = Object.values(manga.attributes.title)[0] as string
 
+            const main_title = altTitleList.find(obj => obj.hasOwnProperty("en"))?.en //english title
+            const alt_title = (main_title && default_title !== main_title) ? "Alt: " + default_title : null //if english title exists, set alt title, else null
+                
             return {
                 mangadex_id: manga.id,
-                title: engTitleObject?.en || Object.values(manga.attributes.title)[0],
+                main_title: main_title || default_title, //if no english title, set default title
+                alt_title: alt_title,
                 image_url: fileName 
                     ? `https://uploads.mangadex.org/covers/${manga.id}/${fileName}.256.jpg` 
                     : null,
                 authors
             }
         })
+
         res.status(200).json(topFiveManga)
     } catch (err) {
         res.status(500).send("Internal Server Error")

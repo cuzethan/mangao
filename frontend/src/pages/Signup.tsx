@@ -30,8 +30,6 @@ export default function Signup() {
     const isFormValid = isPasswordValid && isUsernameValid;
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        console.log(password, pwConfirm)
-        console.log(password === pwConfirm)
         e.preventDefault();
 
         if (showUserMessage) return;

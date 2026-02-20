@@ -16,7 +16,8 @@ export type Manga = {
 
 export type MangaDexManga = {
     mangadex_id: string,
-    title: string,
+    main_title: string,
+    alt_title: string,
     image_url: string
     authors: string[]
 }

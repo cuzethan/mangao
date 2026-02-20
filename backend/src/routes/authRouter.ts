@@ -39,10 +39,7 @@ router.post('/signup', async (req, res) => {
         const query = "INSERT INTO users (username, password_hashed) VALUES ($1, $2)";
         const values = [username, hashedPassword]
         await sendQuery(query, values);
-        res.status(201).json({
-            username: values[0],
-            password: values[1]
-        })
+        res.sendStatus(201);
     } catch (err) {
         //implement proper error catching from postgres with codes
         res.status(500).send(err)
