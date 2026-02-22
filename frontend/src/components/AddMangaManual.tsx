@@ -1,14 +1,11 @@
-import axios from 'axios'
 import { useState } from 'react'
-import { baseURL } from '../constants'
+import api from '../config/api'
 
-const mangaURL = baseURL + "/mangas"
-
-interface AddMangaManualProps  {
+interface AddMangaManualProps {
     onAddingManga: () => void
 }
 
-export default function AddMangaManual({onAddingManga}: AddMangaManualProps) {
+export default function AddMangaManual({ onAddingManga }: AddMangaManualProps) {
     const [errorMessage, setErrorMessage] = useState('')
     const [displayError, setDisplayError] = useState(false)
 
@@ -25,17 +22,8 @@ export default function AddMangaManual({onAddingManga}: AddMangaManualProps) {
             last_checked: new Date()
         }
 
-        const csrfToken = document.cookie.split('=')[1]
-            
         try {
-            await axios.post(`${mangaURL}/addManga`, 
-                processedData,
-                {
-                    headers: {
-                        "X-CSRF-TOKEN": csrfToken
-                    }
-                }
-            )
+            await api.post('mangas/addManga', processedData);
             onAddingManga();
             setDisplayError(false);
             form.reset();
@@ -48,7 +36,7 @@ export default function AddMangaManual({onAddingManga}: AddMangaManualProps) {
     return (
         <form method="post" onSubmit={handleSubmit} className="text-black flex flex-col gap-2">
             <label>
-                Title:  <input name="title" className="border-2 border-black p-1 rounded-lg w-full px-1"/>
+                Title:  <input name="title" className="border-2 border-black p-1 rounded-lg w-full px-1" />
             </label>
             <label className="flex gap-2 items-center">
                 Status: <select name="status" className="border-2 border-black p-1 rounded-lg">
@@ -57,11 +45,11 @@ export default function AddMangaManual({onAddingManga}: AddMangaManualProps) {
                     <option value="planned">Planned</option>
                     <option value="hold">Hold</option>
                 </select>
-                # of Chapters:  <input name="max_chapters" className="border-2 border-black p-1 rounded-lg max-w-15 px-1"/>
+                # of Chapters:  <input name="max_chapters" className="border-2 border-black p-1 rounded-lg max-w-15 px-1" />
             </label>
             <label>
                 Image URL: <input name="image_url" className="border-2 border-black p-1 rounded-lg px-1"
-                placeholder="Leave empty for default..."/>
+                    placeholder="Leave empty for default..." />
             </label>
             {displayError && <p className="text-sm text-red-600">{errorMessage}</p>}
             <button type="submit" className="border-2 border-black p-1 rounded-lg hover:bg-black/5 cursor-pointer px-1">Submit Form</button>

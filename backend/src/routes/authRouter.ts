@@ -21,17 +21,6 @@ router.get('/usernameCheck/:username', async (req, res) => {
     else res.status(200).send(true)
 })
 
-router.get('/listUsers', async (req, res) => {
-    const query = 'SELECT * FROM users';
-    try {
-        const result = await sendQuery(query);
-        res.json(result.rows); 
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
-    }
-})
-
 router.post('/signup', async (req, res) => {
     try {
         const username = req.body.username;
@@ -56,45 +45,57 @@ router.post('/login', async (req, res) => {
     if (!match) return res.status(400).send('Login has failed.');
 
     const userData = { userID: user.id }
-    const accessToken = jwt.sign(userData, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    const accessToken = jwt.sign(userData, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '1m' });
     const refreshToken = crypto.randomBytes(40).toString('hex')
     const expireDate = new Date()
     expireDate.setDate(expireDate.getDate() + 7)
+
     try {
         const query = `INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)`
         const values = [user.id, refreshToken, expireDate]
         await sendQuery(query, values)
     } catch  { res.status(500).send()  }
+    
     // send tokens as cookies
     res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'})
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax', path: '/api/auth/refresh' })
     const csrfToken = crypto.randomBytes(32).toString('hex');
-    res.cookie('csrfToken', csrfToken, { secure: true, sameSite: 'lax' });
+    res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'lax' });
     
-    res.status(200).json({ message: "Logged in", user: user.username });
+    res.status(200).json({
+        csrfToken: csrfToken
+    });
 })
 
 router.get('/refresh', async (req, res) => {
-    const { refreshToken } = req.cookies;
+    const { csrfToken, refreshToken } = req.cookies;
 
     if (!refreshToken) return res.status(401).send("No refresh token");
 
     try {
+        //makme sure refresh token exists
         const query = `SELECT * FROM refresh_tokens WHERE token = $1 and expires_at > NOW()`;
         const result = (await sendQuery(query, [refreshToken])).rows;
         if (result.length === 0) res.status(403).send("Invalid/Expired token");
 
         const user = result[0];
-        const accessToken = jwt.sign({ userID: user.id }, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        const accessToken = jwt.sign({ userID: user.user_id }, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '1m' }); //for testing
+
         res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'});
-        res.status(201).send("Refresh successful!")
+
+        if (!csrfToken) {
+            const csrfToken = crypto.randomBytes(32).toString('hex');
+            res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'lax' });
+        }
+
+        res.status(201).json({ csrfToken })
     } catch {
         res.status(500).send("Internal Server Error")
     }
 
 })
 
-router.delete('/refresh/logout', async (req, res) => {
+router.delete('/logout', async (req, res) => {
     const { refreshToken } = req.cookies
 
     try {

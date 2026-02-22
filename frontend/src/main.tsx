@@ -2,13 +2,14 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
-import axios from 'axios';
 
 import './index.css'
 import App from './pages/App.tsx'
 import Home from './pages/Home.tsx'
 import Signup from './pages/Signup.tsx'
 import Login from './pages/Login.tsx'
+
+import { AuthProvider } from './context/AuthContext.tsx'
 
 const router = createBrowserRouter([
   { index: true, Component: Home },
@@ -26,10 +27,10 @@ const router = createBrowserRouter([
   }
 ]);
 
-axios.defaults.withCredentials = true;
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />,
+    <AuthProvider>
+      <RouterProvider router={router} />,
+    </AuthProvider>
   </StrictMode>,
 )

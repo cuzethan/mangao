@@ -2,13 +2,13 @@ import axios from 'axios'
 
 import { Link, useNavigate } from "react-router"
 import { useState, useEffect } from "react"
-import { baseURL } from '../constants'
+import { baseURL } from '../config/constants'
 
 export default function Signup() {
     const navigate = useNavigate()
 
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState(''); 
+    const [password, setPassword] = useState('');
     const [pwConfirm, setPwConfirm] = useState('');
     const [showPWMessage, setPWMessage] = useState(false);
     const [showUserMessage, setUserMessage] = useState(false);
@@ -26,7 +26,7 @@ export default function Signup() {
     const authURL = baseURL + "/auth"
 
     const isPasswordValid = hasLower && hasUpper && hasNum && hasSymbol && hasMinChar;
-    const isUsernameValid = username.length >= 8; 
+    const isUsernameValid = username.length >= 8;
     const isFormValid = isPasswordValid && isUsernameValid;
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -36,7 +36,7 @@ export default function Signup() {
         if (password !== pwConfirm) {
             setPwNotEqual(true)
             return;
-        } 
+        }
 
         setPwNotEqual(false)
         try {
@@ -44,7 +44,7 @@ export default function Signup() {
             if (result.data) { //user does not exist yet
                 const response = await axios({
                     method: "post",
-                    url: authURL+"/signup",
+                    url: authURL + "/signup",
                     data: { username, password }
                 });
                 if (response.status === 201) {
@@ -52,7 +52,7 @@ export default function Signup() {
                 }
             } else {
                 setUserDNEMsg(true)
-            } 
+            }
         } catch {
             setInternalErr(true)
         }
@@ -105,18 +105,18 @@ export default function Signup() {
                     <form method="post" className="text-2xl flex flex-col gap-5" onSubmit={handleSubmit}>
                         <label>
                             Username:  <input type="text" className="border p-1 rounded-lg w-full"
-                            value={username} onChange={(e) => handleChange(e, setUsername)}/>
+                                value={username} onChange={(e) => handleChange(e, setUsername)} />
                         </label>
                         {showUserMessage && <p className="text-2xl text-red-500">Make sure username contains at least 8 characters.</p>}
                         <label>
                             Password: <input type="password" className="border p-1 rounded-lg w-full"
-                            value={password} onChange={(e) => handleChange(e, setPassword)}/>
+                                value={password} onChange={(e) => handleChange(e, setPassword)} />
                         </label>
                         <label>
                             Confirm Password: <input type="password" className="border p-1 rounded-lg w-full"
-                            value={pwConfirm} onChange={(e) => handleChange(e, setPwConfirm)}/>
+                                value={pwConfirm} onChange={(e) => handleChange(e, setPwConfirm)} />
                         </label>
-                        {showPWMessage && 
+                        {showPWMessage &&
                             <div className="text-lg">
                                 <p className="text-2xl">Your password must have the following:</p>
                                 <p className={hasLower ? "text-green-500" : "text-red-500"}>~ A lower case letter</p>
@@ -129,13 +129,12 @@ export default function Signup() {
                         {pwNotEqual && <p className="text-2xl text-red-500">Make sure password matches with the confirmed password!</p>}
                         {showUserDNEMsg && <p className="text-2xl text-red-500">Username already exists, try a different one.</p>}
                         {showInternalErr && <p className="text-2xl text-red-500">Internal Server Error.</p>}
-                        <button type="submit" 
-                            disabled={!isFormValid} 
-                            className={`border p-1 rounded-lg ${
-                                isFormValid 
-                                    ? "hover:bg-gray-950 cursor-pointer" 
+                        <button type="submit"
+                            disabled={!isFormValid}
+                            className={`border p-1 rounded-lg ${isFormValid
+                                    ? "hover:bg-gray-950 cursor-pointer"
                                     : "cursor-not-allowed"
-                            }`}
+                                }`}
                         >Sign Up
                         </button>
                     </form>

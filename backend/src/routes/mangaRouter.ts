@@ -9,6 +9,7 @@ router.get('/getMangaList', validateSession, async (req, res) => {
     const filters = req.query
     const activeFilters = []
     const user_id = req.user?.userID
+    console.log(user_id)
 
     for (const [key, value] of Object.entries(filters)) {
         if (value === "true") activeFilters.push(`status = '${key}'`)
@@ -22,6 +23,7 @@ router.get('/getMangaList', validateSession, async (req, res) => {
             query = query + " AND (" + moreQuery + ")"
         }
         const result = await sendQuery(query, [user_id]);
+        console.log(result.rows)
         res.json(result.rows); 
     } catch (err) {
         console.error(err);

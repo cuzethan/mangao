@@ -1,8 +1,9 @@
-import axios from 'axios'
-
 import { Link, useNavigate } from "react-router"
 import { useState } from "react"
-import { baseURL } from '../constants'
+
+import { useAuth } from '../context/AuthContext'
+import axios from 'axios'
+import { baseURL } from "../config/constants"
 
 export default function Login() {
     const navigate = useNavigate()
@@ -12,7 +13,7 @@ export default function Login() {
     const [fieldIsEmpty, setFieldIsEmpty] = useState(false);
     const [invalidLogin, setInvalidLogin] = useState(false)
 
-    const authURL = baseURL + "/auth"
+    const { setCsrfTokenMaster } = useAuth()
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -25,11 +26,16 @@ export default function Login() {
         setFieldIsEmpty(false);
 
         try {
-            await axios.post(`${authURL}/login`, { username, password })
+            const res = await axios.post(`${baseURL}/auth/login`, 
+                { username, password },
+                { withCredentials: true }
+            )
+            const token = res.data.csrfToken;
+            setCsrfTokenMaster(token); 
             setInvalidLogin(false);
             navigate('/app')
-        } catch (err) { 
-            setInvalidLogin(true) 
+        } catch (err) {
+            setInvalidLogin(true)
         }
     }
 
@@ -53,16 +59,16 @@ export default function Login() {
                     <form method="post" className="text-2xl flex flex-col gap-5" onSubmit={handleSubmit}>
                         <label>
                             Username:  <input type="text" className="border p-1 rounded-lg w-full"
-                            value={username} onChange={(e) => handleChange(e, setUsername)}/>
+                                value={username} onChange={(e) => handleChange(e, setUsername)} />
                         </label>
                         <label>
                             Password: <input type="password" className="border p-1 rounded-lg w-full"
-                            value={password} onChange={(e) => handleChange(e, setPassword)}/>
+                                value={password} onChange={(e) => handleChange(e, setPassword)} />
                         </label>
                         {fieldIsEmpty && <p className="text-2xl text-red-500">One or both fields are empty.</p>}
                         {invalidLogin && <p className="text-2xl text-red-500">Login is invalid. Try again.</p>}
                         <button type="submit" className="border p-1 rounded-lg hover:bg-gray-950 cursor-pointer">Login</button>
-                </form>
+                    </form>
                 </div>
             </div>
         </div>
