@@ -68,15 +68,15 @@ router.post('/login', async (req, res) => {
 })
 
 router.get('/refresh', async (req, res) => {
-    const { csrfToken, refreshToken } = req.cookies;
+    let { csrfToken, refreshToken } = req.cookies;
 
     if (!refreshToken) return res.status(401).send("No refresh token");
 
     try {
-        //makme sure refresh token exists
+        //make sure refresh token exists
         const query = `SELECT * FROM refresh_tokens WHERE token = $1 and expires_at > NOW()`;
         const result = (await sendQuery(query, [refreshToken])).rows;
-        if (result.length === 0) res.status(403).send("Invalid/Expired token");
+        if (result.length === 0) return res.status(403).send("Invalid/Expired token");
 
         const user = result[0];
         const accessToken = jwt.sign({ userID: user.user_id }, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '1m' }); //for testing
@@ -84,7 +84,7 @@ router.get('/refresh', async (req, res) => {
         res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'});
 
         if (!csrfToken) {
-            const csrfToken = crypto.randomBytes(32).toString('hex');
+            csrfToken = crypto.randomBytes(32).toString('hex');
             res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'lax' });
         }
 

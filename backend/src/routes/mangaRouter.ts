@@ -9,21 +9,20 @@ router.get('/getMangaList', validateSession, async (req, res) => {
     const filters = req.query
     const activeFilters = []
     const user_id = req.user?.userID
-    console.log(user_id)
 
     for (const [key, value] of Object.entries(filters)) {
         if (value === "true") activeFilters.push(`status = '${key}'`)
     }
 
     try {
-        let query = 'SELECT user_manga_ref.id, mangas.title, mangas.status, mangas.image_url FROM ' +
+        let query = 'SELECT user_manga_ref.id, mangas.title, mangas.status, mangas.image_url, '
+        + 'mangas.max_chapters, user_manga_ref.cur_chapter, mangas.tracking FROM ' +
         'user_manga_ref JOIN mangas ON manga_id = mangas.id WHERE user_id = $1'
         if (activeFilters.length > 0) {
             const moreQuery = activeFilters.join(' OR ')
             query = query + " AND (" + moreQuery + ")"
         }
         const result = await sendQuery(query, [user_id]);
-        console.log(result.rows)
         res.json(result.rows); 
     } catch (err) {
         console.error(err);
@@ -58,9 +57,9 @@ router.post('/addManga', validateSession, async (req, res) => {
         const values = [title, status, image_url || null, max_chapters, tracking, mangadex_id || null, last_checked]
         const result = await sendQuery(query, values)
         const manga_id = result.rows[0].id
-
-        query = "INSERT INTO user_manga_ref (user_id, manga_id) VALUES ($1, $2)"
-        await sendQuery(query, [user_id, manga_id])
+        
+        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter) VALUES ($1, $2, $3)"
+        await sendQuery(query, [user_id, manga_id, 0])
         res.status(201).send(`Recieved the data!`)
     } catch (err) {
         if (err && typeof err === 'object' && 'code' in err) {

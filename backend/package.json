@@ -6,7 +6,7 @@
   "author": "ethan",
   "type": "module",
   "scripts": {
-    "start:dev": "nodemon --exec 'ts-node' src/server.ts"
+    "start:dev": "nodemon -L -e ts,json --exec 'ts-node' src/server.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

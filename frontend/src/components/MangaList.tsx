@@ -8,12 +8,11 @@ interface MangaListProps {
 
 function MangaList({ mangas, refreshMangaList }: MangaListProps) {
     const mangaCards = mangas.map(manga => (
-        <MangaCard key={manga.id} title={manga.title} status={manga.status}
-            image_url={manga.image_url} doOnDelete={refreshMangaList} />
+        <MangaCard key={manga.id} manga={manga} doOnDelete={refreshMangaList} />
     ))
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {mangaCards}
         </div>
     )
