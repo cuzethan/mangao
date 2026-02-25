@@ -36,7 +36,10 @@ export default function AddMangaManual({ onAddingManga }: AddMangaManualProps) {
     return (
         <form method="post" onSubmit={handleSubmit} className="text-black flex flex-col gap-2">
             <label>
-                Title:  <input name="title" className="border-2 border-black p-1 rounded-lg w-full px-1" />
+                <div className="flex items-center gap-2">
+                    Title:  
+                    <input name="title" className="border-2 border-black p-1 rounded-lg grow"></input>
+                </div>
             </label>
             <label className="flex gap-2 items-center">
                 Status: <select name="status" className="border-2 border-black p-1 rounded-lg">

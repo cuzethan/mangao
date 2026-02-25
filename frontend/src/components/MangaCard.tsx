@@ -1,7 +1,7 @@
 import { useState } from "react";
-import api from "../config/api";
 import { type Manga, defaultImgUrl } from "../config/constants";
 import Modal from './Modal'
+import MangaEditForm from "./MangaEditForm";
  
 interface CardProps {
     manga: Manga;
@@ -16,37 +16,29 @@ function MangaCard({ manga, doOnDelete }: CardProps) {
         setOpen(true)
     }
 
-    async function handleDeleteClick(e: React.FormEvent<HTMLButtonElement>) {
-        e.preventDefault()
-
-        try {
-            const res = await api.delete(`mangas/deleteManga/${manga.title}`);
-            if (res.status === 201) doOnDelete() //// api status code
-        } catch (err: any) {
-            console.log(err)
-        }
-    }
-
     return (
-        <button onClick={handleMangaClick}className="cursor-pointer hover:bg-gray-950">
-            <div className="border-white border-2 rounded-md p-4 flex justify-between">
-                <div className="flex flex-col gap-2 min-w-1/3">
-                    <h2 className="font-bbh text-4xl flex">{manga.title}</h2>
-                    <img className="w-40 h-60 object-cover" src={manga.image_url || defaultImgUrl} />
+        <div className="md:text-2xl text-3xl font-bbh w-full">
+            <button onClick={handleMangaClick}className="cursor-pointer hover:bg-gray-950 w-full">
+                <div className="relative border-white border-2 rounded-md p-4 flex justify-between">
+                    <h1 className="text-left absolute w-[calc(100%-25px)] truncate">{manga.title}</h1>
+                    <div className="flex flex-col gap-2 min-w-1/3">
+                        <h1 className="text-black">|</h1>
+                        <img className="w-40 h-60 object-cover" src={manga.image_url || defaultImgUrl} />
+                    </div>
+                    <div className="flex flex-col justify-center min-w-13">
+                        <h2 className="font-bbh">CHAPTER: {manga.cur_chapter.toString()}</h2>
+                    </div>
+                    <div className="flex flex-col justify-end items-end font-nunito text-xl min-w-1/3">
+                        <p className="capitalize">
+                            <span className="font-nunito-bold">Status:</span> {manga.status}
+                        </p>
+                    </div>
                 </div>
-                <div className="flex flex-col justify-center min-w-13">
-                    <h2 className="font-bbh text-4xl">CHAPTER: {manga.cur_chapter.toString()}</h2>
-                </div>
-                <div className="flex flex-col justify-between items-end font-nunito text-xl min-w-1/3">
-                    <button onClick={handleDeleteClick} className="border-2 p-2 rounded-lg w-12 h-12 cursor-pointer hover:bg-gray-900">
-                        <img src="src/assets/trash-can.svg" alt="trash" />
-                    </button>
-                    <p className="capitalize text-3xl">
-                        <span className="font-nunito-bold">Status:</span> {manga.status}
-                    </p>
-                </div>
-            </div>
-        </button>
+            </button>
+            <Modal open={open} onClose={() => setOpen(false)}>
+                <MangaEditForm open={open} manga={manga} doOnDelete={doOnDelete}/>
+            </Modal>
+        </div>
     )
 }
 

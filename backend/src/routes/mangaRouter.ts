@@ -15,9 +15,7 @@ router.get('/getMangaList', validateSession, async (req, res) => {
     }
 
     try {
-        let query = 'SELECT user_manga_ref.id, mangas.title, mangas.status, mangas.image_url, '
-        + 'mangas.max_chapters, user_manga_ref.cur_chapter, mangas.tracking FROM ' +
-        'user_manga_ref JOIN mangas ON manga_id = mangas.id WHERE user_id = $1'
+        let query = 'SELECT * FROM user_manga_ref JOIN mangas ON manga_id = mangas.id WHERE user_id = $1'
         if (activeFilters.length > 0) {
             const moreQuery = activeFilters.join(' OR ')
             query = query + " AND (" + moreQuery + ")"

@@ -8,8 +8,8 @@ export type Manga = {
     title: string
     status: Status
     image_url: string
-    max_chapters: Number
-    cur_chapter: Number
+    max_chapters: number
+    cur_chapter: number
     tracking: boolean
     mangadex_id: string
     last_checked: Date

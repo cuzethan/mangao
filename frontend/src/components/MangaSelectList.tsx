@@ -20,7 +20,7 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
     async function handleSelect() {
         try {
             const res = await api.get(`test/getChapters/${mangadex_id}`);
-            const chapters = res.data.sort((a: number, b: number) => a - b);
+            const chapters = res.data
             const max_chapters = chapters.at(-1) || 1;
 
             const tracking = max_chapters ? true : false
@@ -35,8 +35,6 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
                 tracking,
                 mangadex_id
             };
-
-            console.log(data)
 
             await api.post('mangas/addManga', data);
             afterSelect();

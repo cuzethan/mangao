@@ -61,13 +61,16 @@ router.get('/getChapters/:id', validateSession, async (req, res) => {
     });
 
     const volumes = result.data.volumes
-    const numbers: string[] = []
+    const numbers: number[] = []
 
     Object.values(volumes).forEach((volume: any) => {
         const chapters = volume.chapters;
-        Object.keys(chapters).forEach((chapter: string) => {numbers.push(chapter)})
+        Object.keys(chapters).forEach((chapter: string) => {numbers.push(parseInt(chapter, 10))})
     })
-    res.send(numbers)
+
+    const finalChapterList = [...new Set(numbers)]
+    finalChapterList.sort((a: number, b: number) => a - b)
+    res.send(finalChapterList)
 })
 
 export default router
