@@ -18,9 +18,9 @@ function MangaCard({ manga, doOnDelete }: CardProps) {
 
     return (
         <div className="md:text-2xl text-3xl font-bbh w-full">
-            <button onClick={handleMangaClick}className="cursor-pointer hover:bg-gray-950 w-full">
+            <button onClick={handleMangaClick}className="cursor-pointer hover:bg-gray-800 w-full">
                 <div className="relative border-white border-2 rounded-md p-4 flex justify-between">
-                    <h1 className="text-left absolute w-[calc(100%-25px)] truncate">{manga.title}</h1>
+                    <h1 className="text-left absolute w-[calc(75%-25px)] truncate">{manga.title}</h1>
                     <div className="flex flex-col gap-2 min-w-1/3">
                         <h1 className="text-black">|</h1>
                         <img className="w-40 h-60 object-cover" src={manga.image_url || defaultImgUrl} />
@@ -28,7 +28,10 @@ function MangaCard({ manga, doOnDelete }: CardProps) {
                     <div className="flex flex-col justify-center min-w-13">
                         <h2 className="font-bbh">CHAPTER: {manga.cur_chapter.toString()}</h2>
                     </div>
-                    <div className="flex flex-col justify-end items-end font-nunito text-xl min-w-1/3">
+                    <div className="flex flex-col justify-between items-end font-nunito text-xl min-w-1/3">
+                        {manga.tracking && <p className="capitalize">
+                            <span className="font-nunito-bold">Tracking enabled!</span>
+                        </p>}
                         <p className="capitalize">
                             <span className="font-nunito-bold">Status:</span> {manga.status}
                         </p>

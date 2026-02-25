@@ -14,7 +14,6 @@ router.get('/search/:title', validateSession, async (req, res) => {
             url: `${baseUrl}/manga`,
             params: {
                 title: title,
-                limit: 5,
                 "order[relevance]": "desc", 
                 "order[followedCount]": "desc", 
                 "includes[]": ["cover_art", "author"]

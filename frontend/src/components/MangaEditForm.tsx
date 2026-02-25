@@ -14,6 +14,7 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
     const [cur_chapter, setCurChapter] = useState<number | "">(manga.cur_chapter)
     const [max_chapters, setMaxChapters] = useState<number | "">(manga.max_chapters)
     const tracking = manga.tracking;
+    const mangadex_id = manga.mangadex_id;
 
      async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -65,18 +66,21 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
                         value={title} onChange={(e) => setTitle(e.target.value)}/>
                     </div>
                 </label>
-                <label className="flex gap-2 items-center">
-                    Status: <select 
-                    name="status" 
-                    className="border-2 border-black p-1 rounded-lg"
-                    value={status} 
-                    onChange={(e) => setStatus(e.target.value as Status)}>
+                <label className="flex gap-2 items-center onHover">
+                    <span className="font-bold">Status: </span> 
+                    <select 
+                        name="status" 
+                        className="border-2 border-black p-1 rounded-lg hover:bg-black/5"
+                        value={status} 
+                        onChange={(e) => setStatus(e.target.value as Status)}
+                    >
                         <option value="completed">Completed</option>
                         <option value="reading">Reading</option>
                         <option value="planned">Planned</option>
                         <option value="hold">Hold</option>
                     </select>
-                    Cur. Chapter:<input 
+                    <span className="font-bold">Cur Chapter: </span> 
+                    <input 
                         type="text"
                         name="cur_chapter"
                         value={cur_chapter}
@@ -98,7 +102,8 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
                     <span className="text-xs text-gray-500">Max: {max_chapters === "" ? 1 : max_chapters}</span>
                 </label>
                 <label className="flex items-center gap-2">
-                    Set Max Chapters:<input 
+                    <span className="font-bold">Set Max Chapters: </span> 
+                    <input 
                         type="text"
                         name="max_chapters"
                         value={max_chapters}
@@ -114,9 +119,6 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
                                 setCurChapter(1);
                                 return;
                             }
-
-                            console.log(val, cur_chapter)
-
                             if (typeof cur_chapter == "number" && val < cur_chapter) setCurChapter(val)
                             else setMaxChapters(val)
                         }}
@@ -128,7 +130,7 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
                         <img src="src/assets/trash-can.svg" alt="trash" />
                     </button>
                 </label>
-                {tracking && (
+                {tracking && mangadex_id && (
                     <span className="text-xs text-gray-500">
                     Tracking is enabled. Editing the max chapters will turn off tracking and set the last checked date to now. 
                     <br/>To re-enable tracking, edit the manga again and set the max chapters to empty.

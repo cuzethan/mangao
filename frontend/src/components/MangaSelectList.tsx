@@ -43,7 +43,7 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
         }
     }
     return (
-        <button className="border-2 border-black p-1 rounded-lg cursor-pointer hover:bg-black/5 w-full min-w-xl max-w-2xl"
+        <button className="border-2 border-black p-1 rounded-lg cursor-pointer hover:bg-black/5 w-full max-w-full"
             onClick={handleSelect}>
             <div className="flex gap-3">
                 <img className="w-24 h-32 object-cover shrink-0 rounded-md" src={image_url}></img>
@@ -59,7 +59,7 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
 
 export default function MangaSelectList({ mangas, closeModalAndRefresh }: MangaSelectListProps) {
     return (
-        <div>
+        <div className="max-h-[75vh] overflow-y-auto pr-2">
             {mangas.length === 0 ? (
                 <h1 className="text-2xl text-red-600">Manga does not exist on MangaDex or spelt incorrectly.</h1>
             ) : (
