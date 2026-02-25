@@ -13,24 +13,52 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
     const [title, setTitle] = useState<string>(manga.title)
     const [cur_chapter, setCurChapter] = useState<number | "">(manga.cur_chapter)
     const [max_chapters, setMaxChapters] = useState<number | "">(manga.max_chapters)
+
     const tracking = manga.tracking;
     const mangadex_id = manga.mangadex_id;
 
-     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function grabMaxChapter() {
+        try {
+            const res = await api.get(`test/getMaxChapter/${mangadex_id}`);
+            return res.data
+        } catch (err: any) {
+            console.log("err grabbing max chapter: ", err);
+        }
+    }
+
+    function grabAlteredData(data: Manga) {
+        const alteredData: Partial<Manga> = {}
+        
+        if (data.title !== manga.title) alteredData.title = data.title;
+        if (data.status !== manga.status) alteredData.status = data.status;
+        if (Number(data.cur_chapter)!== manga.cur_chapter) alteredData.cur_chapter = data.cur_chapter;
+        if (Number(data.max_chapters) !== manga.max_chapters) alteredData.max_chapters = data.max_chapters;
+
+        return alteredData;
+    }
+
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         const form = e.currentTarget;
 
         const formData = new FormData(form)
         const data = Object.fromEntries(formData.entries())
 
-        const processedData = {
-            ...data,
-            tracking: false,
-            last_checked: new Date()
+        const alteredData = grabAlteredData(data as any)
+        
+        //if tracking is possbile (by mangadex_id), and max_chapters changed
+        if (mangadex_id && "max_chapters" in alteredData) { 
+            if (alteredData.max_chapters === 1) { // 
+                alteredData.max_chapters = await grabMaxChapter();
+                if (!tracking) alteredData.tracking = true; 
+            } 
+
+            //max_chapters is changed (implicit), and tracking is on, turn tracking off
+            if (tracking) alteredData.tracking = false;
         }
 
         try {
-            console.log(data)
+            console.log(alteredData)
         } catch (err: any) {
             console.log(err)
         }
@@ -133,7 +161,7 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
                 {tracking && mangadex_id && (
                     <span className="text-xs text-gray-500">
                     Tracking is enabled. Editing the max chapters will turn off tracking and set the last checked date to now. 
-                    <br/>To re-enable tracking, edit the manga again and set the max chapters to empty.
+                    <br/>To re-enable tracking, edit the manga again and set the max chapters to empty or 1.
                     </span>
                 )}
             </form>

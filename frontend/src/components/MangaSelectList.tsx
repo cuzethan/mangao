@@ -19,12 +19,11 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
 
     async function handleSelect() {
         try {
-            const res = await api.get(`test/getChapters/${mangadex_id}`);
-            const chapters = res.data
-            const max_chapters = chapters.at(-1) || 1;
+            const res = await api.get(`test/getMaxChapter/${mangadex_id}`);
+            const max_chapters = res.data
 
-            const tracking = max_chapters ? true : false
             //tracking will be disabled if chapters don't exist
+            const tracking = !!max_chapters
 
             const data = {
                 image_url,

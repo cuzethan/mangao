@@ -52,7 +52,7 @@ router.get('/search/:title', validateSession, async (req, res) => {
     }
 })
 
-router.get('/getChapters/:id', validateSession, async (req, res) => {
+router.get('/getMaxChapter/:id', validateSession, async (req, res) => {
     const mangadex_id = req.params.id
     const result = await axios({
         method: 'GET',
@@ -67,9 +67,14 @@ router.get('/getChapters/:id', validateSession, async (req, res) => {
         Object.keys(chapters).forEach((chapter: string) => {numbers.push(parseInt(chapter, 10))})
     })
 
+    if (numbers.length === 0) {
+        return res.status(404).send(null);
+    }
+
     const finalChapterList = [...new Set(numbers)]
     finalChapterList.sort((a: number, b: number) => a - b)
-    res.send(finalChapterList)
+    
+    res.status(200).send(finalChapterList.at(-1))
 })
 
 export default router
