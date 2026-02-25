@@ -5,8 +5,9 @@ import { validateSession } from '../middleware/auth.ts'
 
 const router = express.Router()
 
-router.get('/getMangaList', validateSession, async (req, res) => {
+router.get('/getMangaList/{:searchTerm}', validateSession, async (req, res) => {
     const filters = req.query
+    const searchTerm = req.params.searchTerm
     const activeFilters = []
     const user_id = req.user?.userID
 
@@ -19,6 +20,9 @@ router.get('/getMangaList', validateSession, async (req, res) => {
         if (activeFilters.length > 0) {
             const moreQuery = activeFilters.join(' OR ')
             query = query + " AND (" + moreQuery + ")"
+        }
+        if (searchTerm && searchTerm !== "") {
+            query = query + " AND title ILIKE '%" + searchTerm + "%'"
         }
         const result = await sendQuery(query, [user_id]);
         res.json(result.rows); 

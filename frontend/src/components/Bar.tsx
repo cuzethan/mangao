@@ -37,7 +37,8 @@ export default function Bar({filters, onFilterChange, refreshMangaList}: BarProp
     return (
         <div className="font-nunito my-4 flex gap-4 items-center text-2xl">
             <form onSubmit={handleSubmit} className="border-solid border-2 border-white rounded-md p-2">
-                <input type="text" placeholder="Search..." className="focus:outline-none"/>
+                <input type="text" placeholder="Search..." 
+                className="focus:outline-none" onChange={onFilterChange}/>
             </form>
             <label className="flex gap-2">
                 <input type="checkbox" name="completed" 

@@ -9,6 +9,7 @@ function App() {
   const [validAccess, setValidAccess] = useState(false)
   const [errPageMsg, setErrPageMsg] = useState("")
   const [mangaData, setMangaData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     completed: false,
     reading: false,
@@ -17,17 +18,22 @@ function App() {
   })
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = event.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: checked
-    }));
+    console.log(event.target.value)
+    if (event.target.type === "checkbox") {
+      const { name, checked } = event.target;
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [name]: checked
+      }));
+    } else {
+      setSearchTerm(event.target.value)
+    }
   };
 
   const handleMangaRefresh = useCallback(() => {
     const getMangaList = async () => {
       try {
-        const res = await api.get('mangas/getMangaList', { params: filters })
+        const res = await api.get(`mangas/getMangaList/${searchTerm}`, { params: filters });
         setValidAccess(true)
         setMangaData(res.data)
       } catch (err) {
@@ -40,7 +46,7 @@ function App() {
       }
     }
     getMangaList()
-  }, [filters])
+  }, [filters, searchTerm])
 
   useEffect(() => {
     handleMangaRefresh();

@@ -29,12 +29,12 @@ function MangaCard({ manga, doOnDelete }: CardProps) {
                         <h2 className="font-bbh">CHAPTER: {manga.cur_chapter.toString()}</h2>
                     </div>
                     <div className="flex flex-col justify-between items-end font-nunito text-xl min-w-1/3">
-                        {manga.tracking && <p className="capitalize">
-                            <span className="font-nunito-bold">Tracking enabled!</span>
-                        </p>}
                         <p className="capitalize">
                             <span className="font-nunito-bold">Status:</span> {manga.status}
                         </p>
+                        {manga.tracking && <p className="capitalize">
+                            <span className="font-nunito-bold">Tracking enabled!</span>
+                        </p>}
                     </div>
                 </div>
             </button>

@@ -5,15 +5,15 @@ import mangaRouter from './routes/mangaRouter.ts'
 import authRouter from './routes/authRouter.ts'
 import testRouter from './routes/testRouter.ts'
 
-
 export default function (app: express.Application) {
-    app.use(express.json());
     app.use(cors({
         origin: 'http://localhost:5173',
-        methods: ['GET', 'POST', 'DELETE'],
+        methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'X-CSRF-TOKEN', 'Authorization'],
         credentials: true
     }));
 
+    app.use(express.json());
     app.use(cookieParser())
 
     app.get('/', (req, res) => { res.send("mangao backend is running :)") })
