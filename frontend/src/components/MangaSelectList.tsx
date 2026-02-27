@@ -29,7 +29,7 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
                 image_url,
                 last_checked: new Date(),
                 max_chapters,
-                status: "completed",
+                status: "planned",
                 title: main_title, //send only the main title
                 tracking,
                 mangadex_id

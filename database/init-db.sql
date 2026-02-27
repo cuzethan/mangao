@@ -12,7 +12,6 @@ CREATE TABLE users (
 CREATE TABLE mangas (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    status VARCHAR(255) NOT NULL,
     image_url TEXT,
     max_chapters INTEGER NOT NULL,
     tracking BOOLEAN NOT NULL,
@@ -24,6 +23,7 @@ CREATE TABLE user_manga_ref (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     manga_id INTEGER REFERENCES mangas(id) ON DELETE CASCADE,
+    status VARCHAR(255) NOT NULL,
     cur_chapter INTEGER
 );
 

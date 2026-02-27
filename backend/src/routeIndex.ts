@@ -9,7 +9,6 @@ export default function (app: express.Application) {
     app.use(cors({
         origin: 'http://localhost:5173',
         methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'X-CSRF-TOKEN', 'Authorization'],
         credentials: true
     }));
 

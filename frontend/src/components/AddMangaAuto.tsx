@@ -21,7 +21,6 @@ export default function AddMangaAuto({ closeModalAndRefresh }: AddMangaAutoProps
         try {
             const result = await api.get(`test/search/${data.title}`);
             setMangaDexData(result.data)
-            console.log(result.data)
             setShowRecs(true)
             form.reset();
         } catch (err: any) {

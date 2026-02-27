@@ -8,7 +8,7 @@ interface MangaListProps {
 
 function MangaList({ mangas, refreshMangaList }: MangaListProps) {
     const mangaCards = mangas.map(manga => (
-        <MangaCard key={manga.id} manga={manga} doOnDelete={refreshMangaList} />
+        <MangaCard key={manga.id} manga={manga} refreshMangaList={refreshMangaList} />
     ))
 
     return (

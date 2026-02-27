@@ -6,9 +6,10 @@ interface MangaEditFormProps {
     manga: Manga
     open: boolean
     doOnDelete: () => void
+    doOnUpdate: () => void
 }
 
-export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormProps) {
+export default function MangaEditForm({manga, open, doOnDelete, doOnUpdate}: MangaEditFormProps) {
     const [status, setStatus] = useState<string>(manga.status);
     const [title, setTitle] = useState<string>(manga.title)
     const [cur_chapter, setCurChapter] = useState<number | "">(manga.cur_chapter)
@@ -59,6 +60,8 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
 
         try {
             console.log(alteredData)
+            await api.patch(`mangas/editManga/${manga.id}`, alteredData);
+            doOnUpdate();
         } catch (err: any) {
             console.log(err)
         }
@@ -68,8 +71,12 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
         e.preventDefault()
 
         try {
-            const res = await api.delete(`mangas/deleteManga/${manga.title}`);
-            if (res.status === 201) doOnDelete() //// api status code
+            const params = {
+                manga_id: manga.id,
+                mangadex_id: manga.mangadex_id
+            }
+            await api.delete(`mangas/deleteManga`, { params });
+            doOnDelete() 
         } catch (err: any) {
             console.log(err)
         }
@@ -91,7 +98,7 @@ export default function MangaEditForm({manga, open, doOnDelete}: MangaEditFormPr
                     <div className="flex items-center gap-2">
                         <span className="font-bold">Title: </span>  
                         <input name="title" className="border-2 border-black p-1 rounded-lg grow" 
-                        value={title} onChange={(e) => setTitle(e.target.value)}/>
+                        value={title} disabled={!!manga.mangadex_id} onChange={(e) => setTitle(e.target.value)}/>
                     </div>
                 </label>
                 <label className="flex gap-2 items-center onHover">

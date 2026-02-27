@@ -5,10 +5,10 @@ import MangaEditForm from "./MangaEditForm";
  
 interface CardProps {
     manga: Manga;
-    doOnDelete: () => void;
+    refreshMangaList: () => void;
 }
 
-function MangaCard({ manga, doOnDelete }: CardProps) {
+function MangaCard({ manga, refreshMangaList }: CardProps) {
     const [open, setOpen] = useState(false)
 
     async function handleMangaClick(e: React.FormEvent<HTMLButtonElement>) {
@@ -22,7 +22,7 @@ function MangaCard({ manga, doOnDelete }: CardProps) {
                 <div className="relative border-white border-2 rounded-md p-4 flex justify-between">
                     <h1 className="text-left absolute w-[calc(75%-25px)] truncate">{manga.title}</h1>
                     <div className="flex flex-col gap-2 min-w-1/3">
-                        <h1 className="text-black">|</h1>
+                        <h1 className="text-black text-left">.</h1>
                         <img className="w-40 h-60 object-cover" src={manga.image_url || defaultImgUrl} />
                     </div>
                     <div className="flex flex-col justify-center min-w-13">
@@ -32,14 +32,18 @@ function MangaCard({ manga, doOnDelete }: CardProps) {
                         <p className="capitalize">
                             <span className="font-nunito-bold">Status:</span> {manga.status}
                         </p>
-                        {manga.tracking && <p className="capitalize">
-                            <span className="font-nunito-bold">Tracking enabled!</span>
+                        {manga.mangadex_id && <p className="capitalize"> 
+                            <span className="font-nunito-bold">Tracking {manga.tracking ? "enabled" : "disabled"}!</span>
                         </p>}
                     </div>
                 </div>
             </button>
             <Modal open={open} onClose={() => setOpen(false)}>
-                <MangaEditForm open={open} manga={manga} doOnDelete={doOnDelete}/>
+                <MangaEditForm open={open} manga={manga} doOnDelete={refreshMangaList} 
+                doOnUpdate={() => {
+                    refreshMangaList();
+                    setOpen(false);
+                }} />
             </Modal>
         </div>
     )
