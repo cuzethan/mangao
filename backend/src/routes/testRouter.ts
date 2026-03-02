@@ -35,8 +35,6 @@ router.get('/search/:title', validateSession, async (req, res) => {
             const main_title = altTitleList.find(obj => obj.hasOwnProperty("en"))?.en //english title
             const alt_title = (main_title && default_title !== main_title) ? "Alt: " + default_title : null //if english title exists, set alt title, else null
                 
-            console.log(data)
-            
             return {
                 mangadex_id: manga.id,
                 main_title: main_title || default_title, //if no english title, set default title

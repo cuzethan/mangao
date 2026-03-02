@@ -39,9 +39,12 @@ router.post('/addManga', validateSession, async (req, res) => {
         max_chapters,
         tracking,
         mangadex_id,
+        tracking_enabled,
         last_checked
     } = req.body;
     const user_id = req.user?.userID
+
+    console.log(tracking,tracking_enabled)
     
     if (!title) return res.status(400).send('Make sure you input a title.');
 
@@ -70,8 +73,9 @@ router.post('/addManga', validateSession, async (req, res) => {
             manga_id = result.rows[0].id //grab manga id if it already exists in mangas table
         }
 
-        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter, status) VALUES ($1, $2, $3 , $4)"
-        await sendQuery(query, [user_id, manga_id, 1, status])
+
+        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter, status, tracking_enabled) VALUES ($1, $2, $3 , $4, $5)"
+        await sendQuery(query, [user_id, manga_id, 1, status, tracking_enabled])
         return res.status(201).send(`Recieved the data!`)
         
     } catch (err) {

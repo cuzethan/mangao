@@ -19,6 +19,7 @@ export default function AddMangaManual({ onAddingManga }: AddMangaManualProps) {
         const processedData = {
             ...data,
             tracking: false,
+            tracking_enabled: false,
             last_checked: new Date()
         }
 

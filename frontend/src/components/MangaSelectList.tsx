@@ -22,8 +22,18 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
             const res = await api.get(`test/getMaxChapter/${mangadex_id}`);
             const max_chapters = res.data
 
+            let tracking;
+            let tracking_enabled
+
+
             //tracking will be disabled if chapters don't exist
-            const tracking = !!max_chapters
+            if (!max_chapters) {
+                tracking = false
+                tracking_enabled = false
+            } else {
+                tracking = true
+                tracking_enabled = true
+            }
 
             const data = {
                 image_url,
@@ -32,7 +42,8 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
                 status: "planned",
                 title: main_title, //send only the main title
                 tracking,
-                mangadex_id
+                mangadex_id,
+                tracking_enabled
             };
 
             await api.post('mangas/addManga', data);

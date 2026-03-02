@@ -24,7 +24,8 @@ CREATE TABLE user_manga_ref (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     manga_id INTEGER REFERENCES mangas(id) ON DELETE CASCADE,
     status VARCHAR(255) NOT NULL,
-    cur_chapter INTEGER
+    tracking_enabled BOOLEAN NOT NULL,
+    cur_chapter INTEGER NOT NULL
 );
 
 CREATE TABLE refresh_tokens (
