@@ -14,7 +14,7 @@ CREATE TABLE mangas (
     title VARCHAR(255) NOT NULL,
     image_url TEXT,
     max_chapters INTEGER NOT NULL,
-    tracking BOOLEAN NOT NULL,
+    tracking_enabled BOOLEAN NOT NULL,
     mangadex_id TEXT,
     last_checked TIMESTAMP NOT NULL
 );
@@ -24,7 +24,7 @@ CREATE TABLE user_manga_ref (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     manga_id INTEGER REFERENCES mangas(id) ON DELETE CASCADE,
     status VARCHAR(255) NOT NULL,
-    tracking_enabled BOOLEAN NOT NULL,
+    tracking BOOLEAN NOT NULL,
     cur_chapter INTEGER NOT NULL
 );
 

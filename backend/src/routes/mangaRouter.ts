@@ -64,9 +64,9 @@ router.post('/addManga', validateSession, async (req, res) => {
         let result = await sendQuery(query, [mangadex_id])
 
         if (!result.rows[0]) { //if manga doesn't exist in mangas table, add it a
-            query = "INSERT INTO mangas (title, image_url, max_chapters, tracking, mangadex_id, last_checked) "
+            query = "INSERT INTO mangas (title, image_url, max_chapters, tracking_enabled, mangadex_id, last_checked) "
             + "VALUES ($1, $2, $3, $4, $5, $6) RETURNING id";
-            const values = [title, image_url || null, max_chapters, tracking, mangadex_id || null, last_checked]
+            const values = [title, image_url || null, max_chapters, tracking_enabled, mangadex_id || null, last_checked]
             const res = await sendQuery(query, values)
             manga_id = res.rows[0].id //grab manga id after adding to mangas table
         } else {
@@ -74,8 +74,8 @@ router.post('/addManga', validateSession, async (req, res) => {
         }
 
 
-        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter, status, tracking_enabled) VALUES ($1, $2, $3 , $4, $5)"
-        await sendQuery(query, [user_id, manga_id, 1, status, tracking_enabled])
+        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter, status, tracking) VALUES ($1, $2, $3 , $4, $5)"
+        await sendQuery(query, [user_id, manga_id, 1, status, tracking])
         return res.status(201).send(`Recieved the data!`)
         
     } catch (err) {
@@ -118,12 +118,12 @@ router.patch('/editManga/:manga_id', validateSession, async (req, res) => {
         const mangaRefData = clean({
             status: data.status,
             cur_chapter: data.cur_chapter,
+            tracking: data.tracking
         });
 
         const mangaData = clean({
             title: data.title,
             max_chapters: data.max_chapters,
-            tracking: data.tracking
         });
 
         const mangaRefKeys = Object.keys(mangaRefData) as (keyof typeof mangaRefData)[]
@@ -148,7 +148,7 @@ router.patch('/editManga/:manga_id', validateSession, async (req, res) => {
             const values = mangaKeys.map(key => mangaData[key]);
             const mangaIdIndex = mangaKeys.length + 1;
             values.push(manga_id);
-            const query = `UPDATE mangas SET ${setClause} WHERE id = $${mangaIdIndex} AND tracking = false`;
+            const query = `UPDATE mangas SET ${setClause} WHERE id = $${mangaIdIndex}`;
             await sendQuery(query, values);
         }
 

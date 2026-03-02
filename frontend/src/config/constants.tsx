@@ -13,6 +13,7 @@ export type Manga = {
     tracking: boolean
     mangadex_id: string
     last_checked: Date
+    tracking_enabled: boolean
 }
 
 export type MangaDexManga = {

@@ -26,13 +26,13 @@ function MangaCard({ manga, refreshMangaList }: CardProps) {
                         <img className="w-40 h-60 object-cover" src={manga.image_url || defaultImgUrl} />
                     </div>
                     <div className="flex flex-col justify-center min-w-13">
-                        <h2 className="font-bbh">CHAPTER: {manga.cur_chapter.toString()}</h2>
+                        <h2 className="font-bbh">CHAPTER {manga.cur_chapter.toString()}</h2>
                     </div>
                     <div className="flex flex-col justify-between items-end font-nunito text-xl min-w-1/3">
                         <p className="capitalize">
                             <span className="font-nunito-bold">Status:</span> {manga.status}
                         </p>
-                        {manga.mangadex_id && <p className="capitalize"> 
+                        {manga.tracking_enabled && <p className="capitalize"> 
                             <span className="font-nunito-bold">Tracking {manga.tracking ? "enabled" : "disabled"}!</span>
                         </p>}
                     </div>
