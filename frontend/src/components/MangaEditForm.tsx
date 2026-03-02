@@ -54,7 +54,8 @@ export default function MangaEditForm({manga, open, doOnDelete, doOnUpdate}: Man
         //if tracking is possbile (by tracking_enabled), and max_chapters changed
         if (manga.tracking_enabled && "max_chapters" in alteredData) { 
             if (alteredData.max_chapters === 1) { // if set to 1, make tracking work
-                alteredData.max_chapters = await grabMaxChapter();
+                alteredData.max_chapters = manga.tracked_max_chapters;
+                alteredData.last_checked = new Date();
                 if (!tracking) alteredData.tracking = true; 
             } 
 

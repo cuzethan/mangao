@@ -24,6 +24,7 @@ router.get('/getMangaList/{:searchTerm}', validateSession, async (req, res) => {
         if (searchTerm && searchTerm !== "") {
             query = query + " AND title ILIKE '%" + searchTerm + "%'"
         }
+        query = query + " ORDER BY last_checked DESC"
         const result = await sendQuery(query, [user_id]);
         res.json(result.rows); 
     } catch (err) {
@@ -36,6 +37,7 @@ router.post('/addManga', validateSession, async (req, res) => {
     const { title, 
         status, 
         image_url,
+        tracked_max_chapters,
         max_chapters,
         tracking,
         mangadex_id,
@@ -43,8 +45,6 @@ router.post('/addManga', validateSession, async (req, res) => {
         last_checked
     } = req.body;
     const user_id = req.user?.userID
-
-    console.log(tracking,tracking_enabled)
     
     if (!title) return res.status(400).send('Make sure you input a title.');
 
@@ -64,9 +64,9 @@ router.post('/addManga', validateSession, async (req, res) => {
         let result = await sendQuery(query, [mangadex_id])
 
         if (!result.rows[0]) { //if manga doesn't exist in mangas table, add it a
-            query = "INSERT INTO mangas (title, image_url, max_chapters, tracking_enabled, mangadex_id, last_checked) "
+            query = "INSERT INTO mangas (title, image_url, tracked_max_chapters, tracking_enabled, mangadex_id, last_checked) "
             + "VALUES ($1, $2, $3, $4, $5, $6) RETURNING id";
-            const values = [title, image_url || null, max_chapters, tracking_enabled, mangadex_id || null, last_checked]
+            const values = [title, image_url || null, tracked_max_chapters, tracking_enabled, mangadex_id || null, last_checked]
             const res = await sendQuery(query, values)
             manga_id = res.rows[0].id //grab manga id after adding to mangas table
         } else {
@@ -74,8 +74,8 @@ router.post('/addManga', validateSession, async (req, res) => {
         }
 
 
-        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter, status, tracking) VALUES ($1, $2, $3 , $4, $5)"
-        await sendQuery(query, [user_id, manga_id, 1, status, tracking])
+        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter, status, tracking, max_chapters) VALUES ($1, $2, $3 , $4, $5, $6)"
+        await sendQuery(query, [user_id, manga_id, 1, status, tracking, max_chapters])
         return res.status(201).send(`Recieved the data!`)
         
     } catch (err) {
@@ -118,12 +118,13 @@ router.patch('/editManga/:manga_id', validateSession, async (req, res) => {
         const mangaRefData = clean({
             status: data.status,
             cur_chapter: data.cur_chapter,
-            tracking: data.tracking
+            tracking: data.tracking,
+            max_chapters: data.max_chapters
         });
 
         const mangaData = clean({
             title: data.title,
-            max_chapters: data.max_chapters,
+            tracked_max_chapters: data.tracked_max_chapters,
         });
 
         const mangaRefKeys = Object.keys(mangaRefData) as (keyof typeof mangaRefData)[]

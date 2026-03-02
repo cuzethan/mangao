@@ -8,6 +8,7 @@ export type Manga = {
     title: string
     status: Status
     image_url: string
+    tracked_max_chapters: number
     max_chapters: number
     cur_chapter: number
     tracking: boolean

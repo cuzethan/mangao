@@ -13,9 +13,9 @@ CREATE TABLE mangas (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     image_url TEXT,
-    max_chapters INTEGER NOT NULL,
     tracking_enabled BOOLEAN NOT NULL,
     mangadex_id TEXT,
+    tracked_max_chapters INTEGER NOT NULL,
     last_checked TIMESTAMP NOT NULL
 );
 
@@ -25,7 +25,8 @@ CREATE TABLE user_manga_ref (
     manga_id INTEGER REFERENCES mangas(id) ON DELETE CASCADE,
     status VARCHAR(255) NOT NULL,
     tracking BOOLEAN NOT NULL,
-    cur_chapter INTEGER NOT NULL
+    cur_chapter INTEGER NOT NULL,
+    max_chapters INTEGER NOT NULL
 );
 
 CREATE TABLE refresh_tokens (

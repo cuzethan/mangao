@@ -18,6 +18,7 @@ export default function AddMangaManual({ onAddingManga }: AddMangaManualProps) {
 
         const processedData = {
             ...data,
+            tracked_max_chapters: Number(data.max_chapters),
             tracking: false,
             tracking_enabled: false,
             last_checked: new Date()

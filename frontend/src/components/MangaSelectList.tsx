@@ -25,7 +25,6 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
             let tracking;
             let tracking_enabled
 
-
             //tracking will be disabled if chapters don't exist
             if (!max_chapters) {
                 tracking = false
@@ -38,6 +37,7 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
             const data = {
                 image_url,
                 last_checked: new Date(),
+                tracked_max_chapters: max_chapters,
                 max_chapters,
                 status: "planned",
                 title: main_title, //send only the main title
