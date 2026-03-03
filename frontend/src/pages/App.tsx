@@ -18,7 +18,6 @@ function App() {
   })
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value)
     if (event.target.type === "checkbox") {
       const { name, checked } = event.target;
       setFilters((prevFilters) => ({
@@ -40,7 +39,7 @@ function App() {
         if (err instanceof AxiosError) {
           setValidAccess(false)
           const status = err.response?.status
-          if (status == 401) setErrPageMsg("401 UNAUTHROIZED ERROR")
+          if (status == 401) setErrPageMsg("401 UNAUTHORIZED ERROR")
           if (status == 500) setErrPageMsg("500 INTERNAL SERVER ERROR")
         }
       }
@@ -49,8 +48,14 @@ function App() {
   }, [filters, searchTerm])
 
   useEffect(() => {
-    handleMangaRefresh();
-  }, [handleMangaRefresh]);
+    handleMangaRefresh(); //initial manga list load
+
+    const pollInterval = setInterval(() => {
+      handleMangaRefresh();
+    }, 300000);
+
+    return () => clearInterval(pollInterval);
+  }, [handleMangaRefresh]); //poll manga list every 5 minutes OR when filters/search term changes
 
   function defaultPage() {
     return (
