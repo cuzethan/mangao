@@ -58,7 +58,8 @@ export const updateUsersTrackingStatus = async () => {
         for (const row of res.rows) {
             const { user_id, manga_id, tracked_max_chapters, max_chapters } = row
             if (tracked_max_chapters !== max_chapters) {
-                await sendQuery(`UPDATE user_manga_ref SET max_chapters = $1, manga_checked = $2 WHERE user_id = $3 AND manga_id = $4`, [tracked_max_chapters, true, user_id, manga_id])
+                const query = `UPDATE user_manga_ref SET max_chapters = $1, manga_checked = $2 WHERE user_id = $3 AND manga_id = $4 AND tracking = true`
+                await sendQuery(query, [tracked_max_chapters, true, user_id, manga_id])
             }
         }
     } catch (err) {
