@@ -26,7 +26,8 @@ CREATE TABLE user_manga_ref (
     status VARCHAR(255) NOT NULL,
     tracking BOOLEAN NOT NULL,
     cur_chapter INTEGER NOT NULL,
-    max_chapters INTEGER NOT NULL
+    max_chapters INTEGER NOT NULL,
+    manga_checked BOOLEAN NOT NULL
 );
 
 CREATE TABLE refresh_tokens (

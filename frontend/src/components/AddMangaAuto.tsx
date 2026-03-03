@@ -30,7 +30,7 @@ export default function AddMangaAuto({ closeModalAndRefresh }: AddMangaAutoProps
     }
 
     return (
-        <div className="text-black flex flex-col gap-3">
+        <div className="text-black flex flex-col gap-3 max-w-fit">
             <form method="post" onSubmit={handleSubmit}>
                 <div className="flex gap-2 items-center">
                     <span className="font-bold">Title:</span>

@@ -24,7 +24,7 @@ router.get('/getMangaList/{:searchTerm}', validateSession, async (req, res) => {
         if (searchTerm && searchTerm !== "") {
             query = query + " AND title ILIKE '%" + searchTerm + "%'"
         }
-        query = query + " ORDER BY last_checked DESC"
+        query = query + " ORDER BY manga_checked DESC, last_checked DESC"
         const result = await sendQuery(query, [user_id]);
         res.json(result.rows); 
     } catch (err) {
@@ -73,9 +73,13 @@ router.post('/addManga', validateSession, async (req, res) => {
             manga_id = result.rows[0].id //grab manga id if it already exists in mangas table
         }
 
+        query = "SELECT * FROM user_manga_ref WHERE user_id = $1 AND manga_id = $2"
+        result = await sendQuery(query, [user_id, manga_id])
 
-        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter, status, tracking, max_chapters) VALUES ($1, $2, $3 , $4, $5, $6)"
-        await sendQuery(query, [user_id, manga_id, 1, status, tracking, max_chapters])
+        if (result.rows[0]) return res.status(400).send("Manga already exists in your list.")
+
+        query = "INSERT INTO user_manga_ref (user_id, manga_id, cur_chapter, status, tracking, max_chapters, manga_checked) VALUES ($1, $2, $3 , $4, $5, $6, $7)"
+        await sendQuery(query, [user_id, manga_id, 1, status, tracking, max_chapters, false])
         return res.status(201).send(`Recieved the data!`)
         
     } catch (err) {
@@ -119,7 +123,8 @@ router.patch('/editManga/:manga_id', validateSession, async (req, res) => {
             status: data.status,
             cur_chapter: data.cur_chapter,
             tracking: data.tracking,
-            max_chapters: data.max_chapters
+            max_chapters: data.max_chapters,
+            manga_checked: data.manga_checked
         });
 
         const mangaData = clean({

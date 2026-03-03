@@ -17,7 +17,8 @@ function MangaCard({ manga, refreshMangaList }: CardProps) {
     }
 
     return (
-        <div className="md:text-2xl text-3xl font-bbh w-full">
+        <div className={`md:text-2xl text-3xl font-bbh w-full ${manga.manga_checked ? "bg-green-950" : "bg-black"} 
+        rounded-md border-2 border-black`}>
             <button onClick={handleMangaClick}className="cursor-pointer hover:bg-gray-800 w-full">
                 <div className="relative border-white border-2 rounded-md p-4 flex justify-between">
                     <h1 className="text-left absolute w-[calc(75%-25px)] truncate">{manga.title}</h1>
