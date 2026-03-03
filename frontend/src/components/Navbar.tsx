@@ -28,7 +28,7 @@ export default function NavBar() {
                         <li>
                             <Link to="/app">
                                 <div className="flex">
-                                    <img src="src/assets/cropped.png" className="w-10"></img>
+                                    <img src="/cropped.png" alt="Mangao Logo" className="w-10"></img>
                                     <h1 className="pt-1">Mangao</h1>
                                 </div>
                             </Link>
@@ -42,7 +42,7 @@ export default function NavBar() {
                         <li>
                             <Link to="/">
                                 <div className="flex">
-                                    <img src="src/assets/cropped.png" className="w-10"></img>
+                                    <img src="/cropped.png" alt="Mangao Logo" className="w-10"></img>
                                     <h1 className="pt-1">Mangao</h1>
                                 </div>
                             </Link>

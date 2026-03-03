@@ -1,8 +1,8 @@
+import axios from 'axios'
+
 import { Link, useNavigate } from "react-router"
 import { useState } from "react"
-
 import { useAuth } from '../context/AuthContext'
-import axios from 'axios'
 import { baseURL } from "../config/constants"
 
 export default function Login() {
@@ -49,7 +49,7 @@ export default function Login() {
     return (
         <div className="h-screen p-6 text-white font-bbh flex flex-col gap-5">
             <Link to="/" className="flex text-2xl pt-2">
-                <img src="src/assets/cropped.png" className="w-10"></img>
+                <img src="/cropped.png" alt="Mangao Logo" className="w-10"></img>
                 <h1 className="pt-1">Mangao</h1>
             </Link>
             <div className="flex flex-col items-center justify-center gap-6">

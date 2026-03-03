@@ -24,7 +24,7 @@ function MangaCard({ manga, refreshMangaList }: CardProps) {
                     <h1 className="text-left absolute w-[calc(75%-25px)] truncate">{manga.title}</h1>
                     <div className="flex flex-col gap-2 min-w-1/3">
                         <h1 className="text-black text-left">.</h1>
-                        <img className="w-40 h-60 object-cover" src={manga.image_url || defaultImgUrl} />
+                        <img className="w-40 h-60 object-cover object-[40%_center]" src={manga.image_url || defaultImgUrl} />
                     </div>
                     <div className="flex flex-col justify-center min-w-13">
                         <h2 className="font-bbh">CHAPTER {manga.cur_chapter.toString()}</h2>

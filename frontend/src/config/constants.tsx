@@ -1,5 +1,5 @@
 export const baseURL = `http://localhost:${import.meta.env.VITE_PORT|| 3000}/api`
-export const defaultImgUrl = "src/assets/mangao.png"
+export const defaultImgUrl = "/mangao.png"
 
 export type Status = "completed" | "reading" | "planned" | "hold";
 
