@@ -1,4 +1,4 @@
-export const baseURL = import.meta.env.BACKEND_URL || "http://localhost:3000/api"
+export const baseURL = `${import.meta.env.BACKEND_URL}/api` || "http://localhost:3000/api"
 export const defaultImgUrl = "/mangao.png"
 
 export type Status = "completed" | "reading" | "planned" | "hold";
