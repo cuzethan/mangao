@@ -15,7 +15,12 @@ CMD ["npm", "run", "start:dev"]
 
 # --- Stage 3: Build (Compiling TS for Production) ---
 FROM base AS builder
+# Force Docker to re-copy the fresh tsconfig and src right before building
+COPY tsconfig.json ./
+COPY src/ ./src/
 RUN npm run build
+# This line is your "insurance policy" - it will show us exactly what was made
+RUN ls -la /app/dist
 
 # --- Stage 4: Production (For Railway) ---
 # This is the slim version that runs in the cloud.
