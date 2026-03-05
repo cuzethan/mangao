@@ -1,7 +1,7 @@
 import express from 'express'
 import setupRoutes from './routeIndex.ts'
 import { pullMangaUpdatesCron, updateMangaCheckedCron } from './config/cron.ts';
-import { setupDatabase } from '../sql/setup.ts';
+import { setupDatabase } from './config/setupdb.ts';
 
 const app = express();
 
