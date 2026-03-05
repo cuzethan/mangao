@@ -1,4 +1,4 @@
-import { sendQuery } from "../config/db.ts";
+import { sendQuery } from "../config/db.js";
 import axios from "axios";
 
 const baseUrl = 'https://api.mangadex.org'
