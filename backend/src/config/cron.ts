@@ -1,5 +1,5 @@
 import cron from 'node-cron'
-import { pullMangaUpdates, updateUsersTrackingStatus } from '../services/mangaServices.ts';
+import { pullMangaUpdates, updateUsersTrackingStatus } from '../services/mangaServices.js';
 
 export const pullMangaUpdatesCron = () => {
     cron.schedule('0 * * * *', () => {

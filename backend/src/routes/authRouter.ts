@@ -3,8 +3,8 @@ import { hash, compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 
-import { sendQuery } from '../config/db.ts'
-import { validateSession } from '../middleware/auth.ts'
+import { sendQuery } from '../config/db.js'
+import { validateSession } from '../middleware/auth.js'
 
 const router = express.Router()
 

@@ -1,7 +1,7 @@
 import express from 'express'
-import { sendQuery } from '../config/db.ts'
+import { sendQuery } from '../config/db.js'
 
-import { validateSession } from '../middleware/auth.ts'
+import { validateSession } from '../middleware/auth.js'
 
 const router = express.Router()
 

@@ -1,9 +1,9 @@
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import mangaRouter from './routes/mangaRouter.ts'
-import authRouter from './routes/authRouter.ts'
-import testRouter from './routes/testRouter.ts'
+import mangaRouter from './routes/mangaRouter.js'
+import authRouter from './routes/authRouter.js'
+import testRouter from './routes/testRouter.js'
 
 export default function (app: express.Application) {
     app.use(cors({

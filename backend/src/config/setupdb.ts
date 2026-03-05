@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import pool from './db.ts'; // Your pg Pool
+import pool from './db.js'; // Your pg Pool
 
 export const setupDatabase = async () => {
   try {
