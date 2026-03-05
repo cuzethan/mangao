@@ -45,10 +45,10 @@ export default function MangaEditForm({manga, open, doOnDelete, doOnUpdate}: Man
                 alteredData.max_chapters = manga.tracked_max_chapters;
                 alteredData.last_checked = new Date();
                 if (!tracking) alteredData.tracking = true; 
-            } 
-
-            //max_chapters is changed (implicit), and tracking is on, turn tracking off
-            if (tracking) alteredData.tracking = false;
+            } else {
+                //max_chapters is changed (implicit), and tracking is on, turn tracking off
+                if (tracking) alteredData.tracking = false;
+            }
         }
 
         if (manga.manga_checked) alteredData.manga_checked = false;
@@ -156,7 +156,7 @@ export default function MangaEditForm({manga, open, doOnDelete, doOnUpdate}: Man
                     />
                     <button type="submit" className="border-2 border-black p-1 rounded-lg hover:bg-black/5 cursor-pointer grow px-1">Save</button>
                     <button onClick={handleDeleteClick} className="border-2 p-2 rounded-lg w-12 h-12 bg-black ml-auto cursor-pointer hover:bg-gray-800">
-                        <img src="src/assets/trash-can.svg" alt="trash" />
+                        <img src="/trash-can.svg" alt="trash" />
                     </button>
                 </label>
                 {tracking_enabled && (
