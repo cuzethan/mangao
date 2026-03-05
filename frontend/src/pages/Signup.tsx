@@ -92,7 +92,6 @@ export default function Signup() {
         else setUserMessage(false);
     }, [username])
 
-    console.log(baseURL)
     return (
         <div className="h-screen p-6 text-white font-bbh flex flex-col gap-5">
             <Link to="/" className="flex text-2xl pt-2">

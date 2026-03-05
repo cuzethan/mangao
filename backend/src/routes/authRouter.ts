@@ -61,10 +61,10 @@ router.post('/login', async (req, res) => {
     } catch  { res.status(500).send()  }
     
     // send tokens as cookies
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'})
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax', path: '/api/auth/refresh' })
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'none'})
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', path: '/api/auth/refresh' })
     const csrfToken = crypto.randomBytes(32).toString('hex');
-    res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'lax' });
+    res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'none' });
     
     res.status(200).json({
         csrfToken: csrfToken
@@ -91,11 +91,11 @@ router.get('/refresh', async (req, res) => {
         const user = result[0];
         const accessToken = jwt.sign({ userID: user.user_id }, ACCESS_TOKEN_SECRET, { expiresIn: '1m' }); //for testing
 
-        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'});
+        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'none'});
 
         if (!csrfToken) {
             csrfToken = crypto.randomBytes(32).toString('hex');
-            res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'lax' });
+            res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'none' });
         }
 
         res.status(201).json({ csrfToken })
