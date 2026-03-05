@@ -1,7 +1,7 @@
 services:
   db:
     build:
-      context: ./database
+      context: ./backend/database
       dockerfile: Dockerfile
     image: mangao_postgres_db
     env_file:
@@ -17,6 +17,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      target: development
     image: express_backend
     env_file:
       - .env
@@ -28,7 +29,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
 
 volumes:
   db_data:

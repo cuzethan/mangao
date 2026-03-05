@@ -1,14 +1,20 @@
 import express from 'express'
 import setupRoutes from './routeIndex.ts'
-import CONFIG from './config/env.ts';
 import { pullMangaUpdatesCron, updateMangaCheckedCron } from './config/cron.ts';
+import { setupDatabase } from '../sql/setup.ts';
 
 const app = express();
 
+const PORT = Number(process.env.PORT) || 3000;
+
 setupRoutes(app)
 
-app.listen(CONFIG.PORT, () => {
-    console.log(`Example app listening on port ${CONFIG.PORT}`);
+if (process.env.NODE_ENV === 'production') { // only for production, docker will run local db
+    setupDatabase()
+}
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Production serving running on port ${PORT}`);
     pullMangaUpdatesCron();
     updateMangaCheckedCron();
 });

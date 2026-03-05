@@ -10,7 +10,6 @@ POSTGRES_USER=mangao_user
 POSTGRES_PASSWORD=mangao_password
 
 # For express backend
-VITE_BACKEND_PORT=3000
 PORT=3000
 
 PGUSER=mangao_user

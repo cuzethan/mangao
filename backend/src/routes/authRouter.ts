@@ -1,7 +1,6 @@
 import express from 'express'
 import { hash, compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import CONFIG from '../config/env.ts'
 import crypto from 'crypto'
 
 import { sendQuery } from '../config/db.ts'
@@ -37,6 +36,11 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body
+    const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+    if (ACCESS_TOKEN_SECRET === undefined) {
+        console.error("ACCESS_TOKEN_SECRET is not defined in environment variables.");
+        return res.status(500).send("Server configuration error.");
+    }
     const query = `SELECT * FROM users WHERE username = $1`
     const user = (await sendQuery(query, [username])).rows[0]
     if (user == null) return res.status(400).send("Login has failed.");
@@ -45,7 +49,7 @@ router.post('/login', async (req, res) => {
     if (!match) return res.status(400).send('Login has failed.');
 
     const userData = { userID: user.id }
-    const accessToken = jwt.sign(userData, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '1m' });
+    const accessToken = jwt.sign(userData, ACCESS_TOKEN_SECRET, { expiresIn: '1m' });
     const refreshToken = crypto.randomBytes(40).toString('hex')
     const expireDate = new Date()
     expireDate.setDate(expireDate.getDate() + 7)
@@ -72,6 +76,12 @@ router.get('/refresh', async (req, res) => {
 
     if (!refreshToken) return res.status(401).send("No refresh token");
 
+    const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+    if (ACCESS_TOKEN_SECRET === undefined) {
+        console.error("ACCESS_TOKEN_SECRET is not defined in environment variables.");
+        return res.status(500).send("Server configuration error.");
+    }
+
     try {
         //make sure refresh token exists
         const query = `SELECT * FROM refresh_tokens WHERE token = $1 and expires_at > NOW()`;
@@ -79,7 +89,7 @@ router.get('/refresh', async (req, res) => {
         if (result.length === 0) return res.status(403).send("Invalid/Expired token");
 
         const user = result[0];
-        const accessToken = jwt.sign({ userID: user.user_id }, CONFIG.ACCESS_TOKEN_SECRET, { expiresIn: '1m' }); //for testing
+        const accessToken = jwt.sign({ userID: user.user_id }, ACCESS_TOKEN_SECRET, { expiresIn: '1m' }); //for testing
 
         res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'lax'});
 

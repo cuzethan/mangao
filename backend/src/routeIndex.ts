@@ -7,7 +7,7 @@ import testRouter from './routes/testRouter.ts'
 
 export default function (app: express.Application) {
     app.use(cors({
-        origin: 'http://localhost:5173',
+        origin: [process.env.FRONTEND_URL as string, 'http://localhost:5173'],
         methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
         credentials: true
     }));
