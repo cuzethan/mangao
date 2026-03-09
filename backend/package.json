@@ -6,9 +6,9 @@
   "author": "ethan",
   "type": "module",
   "scripts": {
-      "build": "tsc",
-      "start": "node dist/server.js",
-      "start:dev": "nodemon -L -e ts,json --exec 'ts-node' src/server.ts"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "start:dev": "nodemon --exec tsx src/server.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -19,6 +19,7 @@
     "@types/pg": "^8.16.0",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {

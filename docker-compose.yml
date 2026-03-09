@@ -1,7 +1,7 @@
 services:
   db:
     build:
-      context: ./backend/database
+      context: ./backend/sql
       dockerfile: Dockerfile
     image: mangao_postgres_db
     env_file:
