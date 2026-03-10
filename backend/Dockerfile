@@ -11,8 +11,9 @@ CMD ["npm", "run", "start:dev"]
 
 FROM base AS builder
 COPY . .
-RUN ls -R .
 RUN npm run build
+
+ls -d /app/dist && ls /app/dist
 
 # --- Stage 4: Production (For Railway) ---
 FROM node:25-alpine AS production

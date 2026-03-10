@@ -41,7 +41,7 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     
-    "noEmit": true,
+    "noEmit": false,
     "allowImportingTsExtensions": false,
   },
   "include": ["src/**/*"]
