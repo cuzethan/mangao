@@ -13,7 +13,7 @@ FROM base AS builder
 COPY . .
 RUN npm run build
 
-ls -d /app/dist && ls /app/dist
+RUN ls -d /app/dist && ls /app/dist
 
 # --- Stage 4: Production (For Railway) ---
 FROM node:25-alpine AS production
