@@ -1,23 +1,17 @@
-# --- Stage 1: Base ---
 FROM node:25-alpine AS base
 WORKDIR /app
-# Copy package files and install all dependencies (including TypeScript)
 COPY package*.json ./
 RUN npm install
 
-# --- Stage 2: Development (For your Local Docker) ---
-# Your local docker-compose should target this stage
 FROM base AS development
 COPY . .
 ENV PORT=3000
 EXPOSE 3000
 CMD ["npm", "run", "start:dev"]
 
-# --- Stage 3: Builder (Compiling TS for Production) ---
 FROM base AS builder
-# Copy the rest of the source code
 COPY . .
-# Run the build and then list the directory to PROVE it exists
+RUN ls -R .
 RUN npm run build
 
 # --- Stage 4: Production (For Railway) ---
