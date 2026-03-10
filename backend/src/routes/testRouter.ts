@@ -60,6 +60,11 @@ router.get('/getMaxChapter/:id', validateSession, async (req, res) => {
     });
 
     const volumes = result.data.volumes
+
+    if (volumes.length === 0) {
+        return res.status(200).send(0); //if no chapters exist, return 0 
+    }
+
     const numbers: number[] = []
 
     Object.values(volumes).forEach((volume: any) => {

@@ -26,8 +26,7 @@ function MangaSelectCard({ image_url, main_title, alt_title, authors, mangadex_i
             let tracking;
             let tracking_enabled
 
-            //tracking will be disabled if chapters don't exist
-            if (!max_chapters) {
+            if (!max_chapters || max_chapters === 0) {
                 tracking = false
                 tracking_enabled = false
             } else {

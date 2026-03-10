@@ -92,7 +92,6 @@ router.delete('/deleteManga', validateSession, async (req, res) => {
     const user_id = req.user?.userID;
     try {
         let query: string
-        console.log(req.params)
         if (!mangadex_id) { //if untracked manga, delete from manga table
             query = "DELETE FROM mangas WHERE id = $1 RETURNING id";
             await sendQuery(query, [manga_id])
