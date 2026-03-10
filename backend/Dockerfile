@@ -18,7 +18,7 @@ FROM base AS builder
 # Copy the rest of the source code
 COPY . .
 # Run the build and then list the directory to PROVE it exists
-RUN npm run build && ls -la /app/dist
+RUN npm run build
 
 # --- Stage 4: Production (For Railway) ---
 FROM node:25-alpine AS production
