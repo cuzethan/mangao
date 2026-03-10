@@ -1,26 +1,36 @@
-## IMPORTANT
+# WELCOME TO MANGAO
 
-Make sure to make a .env fine inside home directory
+Hello everyone, welcome to this fun project of mine.
 
-# Contents of .env:
+**Mangao** is a manga (japanese-comic) chapter bookmark web application, which inclues a tracking feature (courtesy of MANGADEX api)
+to get real time new-chapter updates.
 
-# For the database container
-POSTGRES_DB=mangao_db
-POSTGRES_USER=mangao_user
-POSTGRES_PASSWORD=mangao_password
+This applicaiton has a genuine personal use for me, because initially I kept my manga list in a simple document,
+and manually having to search each manga title to check for new chapters was starting to piss me off.
 
-# For express backend
-PORT=3000
+This was my manga list looked like:
+> Mercenary Enrollment - Chapter 277
+>
+> The Player That Can't Level Up - Chapter 221  
+>
+> 50+ more manga titles....
 
-PGUSER=mangao_user
-PGPASSWORD=mangao_password
-PGDATABASE=mangao_db
-PGHOST=db
-PGPORT=5432
+## How to run your own Mangao for fun
 
-ACCESS_TOKEN_SECRET='5c43e3b73deb28c86f899f9908433e79d246203489cc8d674650ff20ce670066920e9d91c14d5664ae71e0e9f319ba90e3e469a5bb88f10f26bdf05167c83742'
+1. Git clone this repository into your local folder
+2. Create ".env" file inside the main directory, and copy it's contents from the provided ".env.example" file
+3. Make sure you have the docker daemon installed
+4. Run the following command on the mangao directory
+    * docker compose up --build -d
+    * **NOTE:** you can remove --build on subsequent calls
+5. Run "cd frontend" to get to your frontend folder
+6. Run "npm i" and "npm run dev" to turn on the frontend
+7. Enjoy your personal website!
 
+**NOTE:** for whatever reason if you want to reset your database, run "docker compose down -v", then rerun "docker compose up -d"
 
-## Enter the db from docker desktop exec.
-
->> psql -U mangao_user -d mangao_db
+## Enter the db from docker desktop:
+1. Open the database link from mangao in the containers tab
+2. Click execute
+3. Run "psql -U mangao_user -d mangao_db"
+4. Now you can make psql queries directly if you just want to mess with it
