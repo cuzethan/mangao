@@ -26,22 +26,16 @@ const getMaxChapterFromMangaDex = async (mangadex_id: string) => {
 
 export const pullMangaUpdates = async () => {
     try {
-        const res = await sendQuery(`SELECT id, mangadex_id, last_checked FROM mangas WHERE tracking_enabled = true`)
-
+        const res = await sendQuery(`SELECT id, tracked_max_chapters, mangadex_id, last_checked FROM mangas WHERE tracking_enabled = true`)
+        const mangalistLength = res.rows.length
         for (const row of res.rows) {
             const mangaId = row.mangadex_id
-            const mangaRes = await axios.get(`${baseUrl}/manga/${mangaId}`)
-            const mangaData = mangaRes.data
-            const lastUpdate = mangaData.data.attributes.updatedAt
-
-            const dateLastChecked = new Date(row.last_checked).getTime()
-            const dateLastUpdate = new Date(lastUpdate).getTime()
-
-            if (dateLastChecked < dateLastUpdate) {
-                const maxChapter = await getMaxChapterFromMangaDex(mangaId)
-                if (maxChapter) await sendQuery(`UPDATE mangas SET tracked_max_chapters = $1, last_checked = $2 WHERE id = $3`, [maxChapter, new Date(), row.id])
+            const maxChapter = await getMaxChapterFromMangaDex(mangaId)
+            if (maxChapter && maxChapter > row.tracked_max_chapters) {
+                await sendQuery(`UPDATE mangas SET tracked_max_chapters = $1, last_checked = $2 WHERE id = $3`, [maxChapter, new Date(), row.id])
+                console.log(`Checked manga ${mangaId} for updates. Max chapter: ${maxChapter}`)
             }
-            delay(1000)
+            delay(6000) // 6 min delay per request
         }
     } catch (err) {
         console.log(err)
@@ -58,6 +52,7 @@ export const updateUsersTrackingStatus = async () => {
         for (const row of res.rows) {
             const { user_id, manga_id, tracked_max_chapters, max_chapters } = row
             if (tracked_max_chapters !== max_chapters) {
+                console.log(`Updating tracking status for user ${user_id} and manga ${manga_id}`)
                 const query = `UPDATE user_manga_ref SET max_chapters = $1, manga_checked = $2 WHERE user_id = $3 AND manga_id = $4 AND tracking = true`
                 await sendQuery(query, [tracked_max_chapters, true, user_id, manga_id])
             }

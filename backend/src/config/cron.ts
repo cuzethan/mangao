@@ -1,16 +1,16 @@
 import cron from 'node-cron'
 import { pullMangaUpdates, updateUsersTrackingStatus } from '../services/mangaServices.js';
 
-export const pullMangaUpdatesCron = () => {
-    cron.schedule('0 * * * *', () => {
-        console.log('Pulling manga updates every hour');
+export const pullMangaUpdatesCron = () => { //every 30 min
+    pullMangaUpdates() 
+    cron.schedule('*/30 * * * *', () => {
         pullMangaUpdates();
     });
 };
 
-export const updateMangaCheckedCron = () => {
-    cron.schedule('0 * * * *', () => {
-        console.log('Updating manga_checked field every hour');
+export const updateMangaCheckedCron = () => { //every 5 min
+    updateUsersTrackingStatus
+    cron.schedule('*/5 * * * *', () => {
         updateUsersTrackingStatus();
     });
 }
