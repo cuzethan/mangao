@@ -1,12 +1,10 @@
 # WELCOME TO MANGAO
 
-Hello everyone, welcome to this fun project of mine.
+Hello everyone, welcome to this cool project of mine. ^_^
 
-**Mangao** is a manga (japanese-comic) chapter bookmark web application, which includes a tracking feature (courtesy of the MANGADEX API)
-to get real time new-chapter updates.
+**Mangao** is a manga (japanese-comic) chapter bookmark web app, which includes a live tracking feature (courtesy of the MANGADEX API) to get real time new-chapter updates for your personal list.
 
-This applicaiton has a genuine personal use for me, because initially I kept my manga list in a simple document,
-and manually having to search each manga title to check for new chapters was starting to piss me off.
+This applicaiton has a genuine personal use for me, because initially I kept my manga list in a simple document, and manually having to search each manga title to check for new chapters was starting to piss me off.
 
 This was what my manga list looked like:
 > Mercenary Enrollment - Chapter 277
@@ -15,11 +13,60 @@ This was what my manga list looked like:
 >
 > 50+ more manga titles....
 
-## Project overview and docs
+Building an actual application to remove potentially hours of keystrokes in the long run was really satisfying
+
+### Stack
+
+- **Frontend**: React SPA deployed on Vercel  
+- **Backend**: Node.js + Express API deployed on Railway  
+- **Database**: PostgreSQL  
+- **Scheduling**: Cron jobs to refresh manga metadata on a schedule
+
+### Key features
+
+- **User accounts and secure sessions**  
+  Users sign up and log in, with short‑lived access tokens and long‑lived refresh tokens stored server‑side.
+
+- **Personal manga list**  
+  Add manga, track current chapter, status (reading, completed, etc.), and update entries over time.
+
+- **Automatic manga updates**  
+  Background jobs periodically pull updated chapter information so users can quickly see what’s new.
+
+- **Protected API endpoints**  
+  Most data‑changing routes are protected by a session‑validation middleware that checks both authentication and CSRF tokens.
+
+### Project structure
+
+```text
+mangao/
+├─ README.md
+├─ docker-compose.yml
+├─ docs/
+│  ├─ README.md
+│  ├─ backend-auth-and-cookies.md
+│  └─ architecture-overview.md
+├─ backend/
+│  ├─ Dockerfile
+│  ├─ package.json
+│  ├─ tsconfig.json
+│  ├─ sql/
+│  └─ src/
+├─ frontend/
+│  ├─ README.md
+│  ├─ package.json
+│  ├─ public/
+│  └─ src/
+└─ node_modules/  (root tooling dependencies)
+```
+
+### Documentation
 
 - For a recruiter-friendly overview of the project and its features, see `docs/README.md`.
-- For a deep dive into how authentication, cookies, and CSRF protection work (including the `SameSite` setup for Vercel + Railway), see `docs/backend-auth-and-cookies.md`.
-- For a high-level architecture diagram and explanation of how the frontend, backend, database, and cron jobs fit together, see `docs/architecture-overview.md`.
+
+- **Backend auth, cookies, and CSRF**: see `[docs/backend-auth-and-cookies.md](backend-auth-and-cookies.md)`  
+- **Architecture overview**: see `[docs/architecture-overview.md](architecture-overview.md)`
+
 
 ## How to run your own Mangao for fun
 
