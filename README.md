@@ -20,7 +20,8 @@ Building an actual application to remove potentially hours of keystrokes in the 
 - **Frontend**: React SPA deployed on Vercel  
 - **Backend**: Node.js + Express API deployed on Railway  
 - **Database**: PostgreSQL  
-- **Scheduling**: Cron jobs to refresh manga metadata on a schedule
+- **Scheduling**: Cron jobs to refresh manga metadata on a schedule  
+- **Containerization**: Docker + docker-compose for local development and reproducible environments
 
 ### Key features
 
@@ -62,10 +63,9 @@ mangao/
 
 ### Documentation
 
-- For a recruiter-friendly overview of the project and its features, see `docs/README.md`.
-
-- **Backend auth, cookies, and CSRF**: see `[docs/backend-auth-and-cookies.md](backend-auth-and-cookies.md)`  
-- **Architecture overview**: see `[docs/architecture-overview.md](architecture-overview.md)`
+- For a recruiter-friendly overview of the project and its features, see [`docs/README.md`](docs/README.md).
+- **Backend auth, cookies, and CSRF**: see [`docs/backend-auth-and-cookies.md`](docs/backend-auth-and-cookies.md)  
+- **Architecture overview**: see [`docs/architecture-overview.md`](docs/architecture-overview.md)
 
 
 ## How to run your own Mangao for fun
