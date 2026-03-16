@@ -34,6 +34,8 @@ router.post('/signup', async (req, res) => {
     }
 })
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 router.post('/login', async (req, res) => {
     const { username, password } = req.body
     const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
@@ -59,12 +61,18 @@ router.post('/login', async (req, res) => {
         const values = [user.id, refreshToken, expireDate]
         await sendQuery(query, values)
     } catch  { res.status(500).send()  }
-    
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' as const : 'lax' as const,
+    }
+
     // send tokens as cookies
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'none'})
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', path: '/api/auth/refresh' })
+    res.cookie('accessToken', accessToken, cookieOptions)
+    res.cookie('refreshToken', refreshToken, { ...cookieOptions, path: '/api/auth/refresh' })
     const csrfToken = crypto.randomBytes(32).toString('hex');
-    res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'none' });
+    res.cookie('csrfToken', csrfToken, cookieOptions);
     
     res.status(200).json({
         csrfToken: csrfToken
@@ -91,11 +99,17 @@ router.get('/refresh', async (req, res) => {
         const user = result[0];
         const accessToken = jwt.sign({ userID: user.user_id }, ACCESS_TOKEN_SECRET, { expiresIn: '1m' }); //for testing
 
-        res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'none'});
+        const cookieOptions = {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? 'none' as const : 'lax' as const,
+        }
+
+        res.cookie('accessToken', accessToken, cookieOptions);
 
         if (!csrfToken) {
             csrfToken = crypto.randomBytes(32).toString('hex');
-            res.cookie('csrfToken', csrfToken, { httpOnly: true, secure: true, sameSite: 'none' });
+            res.cookie('csrfToken', csrfToken, cookieOptions);
         }
 
         res.status(201).json({ csrfToken })
@@ -114,15 +128,19 @@ router.delete('/logout', async (req, res) => {
     } catch {
         res.status(500).send("Internal Server Error")
     }
-    
-    res.clearCookie('accessToken')
+
+    const clearCookieOptions = {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' as const : 'lax' as const,
+    }
+
+    res.clearCookie('accessToken', clearCookieOptions)
     res.clearCookie('refreshToken', { 
-        httpOnly: true, 
-        secure: true, 
-        sameSite: 'lax', 
+        ...clearCookieOptions,
         path: '/api/auth/refresh' 
     })
-    res.clearCookie('csrfToken')
+    res.clearCookie('csrfToken', clearCookieOptions)
 
     res.status(200).send("Sucessfully logged out")
 })
